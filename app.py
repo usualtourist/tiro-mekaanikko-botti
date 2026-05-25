@@ -17,13 +17,12 @@ load_dotenv()
 st.set_page_config(
     page_title="Tiro — Mekaanikko-oppilas",
     page_icon="🔩",
-    layout="centered",
+    layout="wide",
 )
 
 
 # --------------------------------------------------
-# Mekaanikkoteema: luettavampi vaalea työpajateema
-# + hitaasti pyörivä hammasratas
+# Mekaanikkoteema
 # --------------------------------------------------
 
 st.markdown(
@@ -69,7 +68,7 @@ st.markdown(
     }
 
     .block-container {
-        background-color: rgba(255, 255, 255, 0.78);
+        background-color: rgba(255, 255, 255, 0.84);
         border: 1px solid rgba(214, 199, 170, 0.8);
         border-radius: 14px;
         padding-top: 2rem;
@@ -147,6 +146,7 @@ st.markdown(
         box-shadow: 0 5px 18px rgba(31, 41, 51, 0.07);
         color: var(--workshop-text);
         line-height: 1.55;
+        margin-bottom: 1rem;
     }
 
     .tiro-workshop-banner b {
@@ -208,7 +208,7 @@ st.markdown(
     }
 
     /* --------------------------------------------------
-       Syötteet, valikot ja chat input
+       Syötteet
     -------------------------------------------------- */
 
     input,
@@ -227,19 +227,6 @@ st.markdown(
 
     [data-testid="stChatInput"] textarea {
         color: var(--workshop-text) !important;
-    }
-
-    /* --------------------------------------------------
-       Progress bar
-    -------------------------------------------------- */
-
-    [data-testid="stProgress"] {
-        background-color: #eee3d1;
-        border-radius: 999px;
-    }
-
-    [data-testid="stProgressBar"] > div > div {
-        background: linear-gradient(90deg, #e67e22, #f5b041) !important;
     }
 
     /* --------------------------------------------------
@@ -270,6 +257,38 @@ st.markdown(
     }
 
     /* --------------------------------------------------
+       Oikea työpajapaneeli
+    -------------------------------------------------- */
+
+    .right-workshop-panel {
+        background: rgba(255, 248, 237, 0.96);
+        border: 1px solid var(--workshop-border);
+        border-left: 6px solid var(--workshop-orange);
+        border-radius: 14px;
+        padding: 1rem;
+        box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08);
+        margin-bottom: 1rem;
+    }
+
+    .right-workshop-panel h3 {
+        border-left: none !important;
+        padding-left: 0 !important;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .right-panel-note {
+        background: #fffdf7;
+        border: 1px solid var(--workshop-border);
+        border-radius: 10px;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--workshop-text);
+    }
+
+    /* --------------------------------------------------
        Opeteltavat asiat -kortit
     -------------------------------------------------- */
 
@@ -284,7 +303,7 @@ st.markdown(
     }
 
     .learning-card-title {
-        font-size: 1.05rem;
+        font-size: 1.02rem;
         font-weight: 800;
         color: var(--workshop-dark);
         margin-bottom: 0.25rem;
@@ -298,68 +317,16 @@ st.markdown(
     .learning-card-desc {
         color: var(--workshop-muted);
         line-height: 1.45;
+        font-size: 0.93rem;
     }
 
-    /* --------------------------------------------------
-       Hitaasti pyörivä hammasratas taustalla
-    -------------------------------------------------- */
-
-    .gear-background {
-        position: fixed;
-        right: -90px;
-        bottom: -90px;
-        width: 360px;
-        height: 360px;
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.085;
-        animation: rotateGear 42s linear infinite;
-    }
-
-    .gear-background svg {
-        width: 100%;
-        height: 100%;
-        fill: #263238;
-    }
-
-    @keyframes rotateGear {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    [data-testid="stAppViewContainer"],
-    [data-testid="stHeader"],
-    [data-testid="stToolbar"],
-    [data-testid="stSidebar"] {
-        position: relative;
-        z-index: 1;
-    }
-
-    @media (max-width: 768px) {
-        .gear-background {
-            width: 220px;
-            height: 220px;
-            right: -65px;
-            bottom: -65px;
-            opacity: 0.06;
-        }
-
+    @media (max-width: 900px) {
         .block-container {
             padding-left: 1rem;
             padding-right: 1rem;
         }
     }
     </style>
-
-    <div class="gear-background" aria-hidden="true">
-        <svg viewBox="0 0 512 512">
-            <path d="M487.4 315.7l-42.6-24.6c2.4-11.4 3.7-23.1 3.7-35.1s-1.3-23.7-3.7-35.1l42.6-24.6c7.8-4.5 11.2-14 8.1-22.4l-21.4-58.7c-3.1-8.4-11.9-13.3-20.7-11.5l-48.1 9.8c-16.9-20.1-37.9-36.9-61.8-49.2L338.4 16c-.9-9-8.4-16-17.5-16h-64c-9.1 0-16.6 7-17.5 16l-5.1 48.3c-23.9 12.3-44.9 29.1-61.8 49.2l-48.1-9.8c-8.8-1.8-17.6 3.1-20.7 11.5l-21.4 58.7c-3.1 8.4.3 17.9 8.1 22.4l42.6 24.6c-2.4 11.4-3.7 23.1-3.7 35.1s1.3 23.7 3.7 35.1l-42.6 24.6c-7.8 4.5-11.2 14-8.1 22.4l21.4 58.7c3.1 8.4 11.9 13.3 20.7 11.5l48.1-9.8c16.9 20.1 37.9 36.9 61.8 49.2l5.1 48.3c.9 9 8.4 16 17.5 16h64c9.1 0 16.6-7 17.5-16l5.1-48.3c23.9-12.3 44.9-29.1 61.8-49.2l48.1 9.8c8.8 1.8 17.6-3.1 20.7-11.5l21.4-58.7c3.1-8.4-.3-17.9-8.1-22.4zM288.9 336c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"/>
-        </svg>
-    </div>
     """,
     unsafe_allow_html=True,
 )
@@ -404,7 +371,7 @@ def init_bot(topic_key: str) -> TeachingBot:
         topic_key=topic_key,
         main_model=st.session_state.get("main_model", "gpt-4o"),
         judge_model="gpt-4o-mini",
-        temperature=st.session_state.get("temperature", 0.8),
+        temperature=st.session_state.get("temperature", 0.6),
         max_turns=st.session_state.get("max_turns", 30),
     )
 
@@ -442,7 +409,7 @@ for key, default in [
     ("skill_test", None),
     ("current_topic", "oljynsuodatin"),
     ("main_model", "gpt-4o"),
-    ("temperature", 0.8),
+    ("temperature", 0.6),
     ("max_turns", 30),
 ]:
     if key not in st.session_state:
@@ -450,7 +417,7 @@ for key, default in [
 
 
 # --------------------------------------------------
-# Sivupalkki
+# Sivupalkki vasemmalla: käyttöohjeet ja asetukset
 # --------------------------------------------------
 
 with st.sidebar:
@@ -461,8 +428,8 @@ with st.sidebar:
             """
 **Mikä Tiro on?**
 
-Tiro on opetettava mekaanikko-oppilas. Hän ei tiedä aiheesta juuri mitään,
-vaan oppii sen, mitä sinä hänelle opetat.
+Tiro on opetettava mekaanikko-oppilas. Hän ei ole opettaja, vaan oppilas.
+Sinun tehtäväsi on opettaa hänelle valittu huoltotehtävä.
 
 **Näin käytät bottia:**
 
@@ -471,13 +438,12 @@ vaan oppii sen, mitä sinä hänelle opetat.
 3. Kirjoita opetuksesi keskustelukenttään.
 4. Vastaa Tiron jatkokysymyksiin.
 5. Korjaa Tiroa, jos hän tekee virhepäätelmän.
-6. Seuraa oppimisedistymistä keskustelun alla.
+6. Tarkista opeteltavat asiat oikeasta paneelista.
 7. Kun haluat, pyydä Tiroa kokeilemaan taitojaan.
 
 **Tavoite:**
 
-Opeta Tirolle kaikki opeteltavat osa-alueet niin selkeästi, että
-oppimisedistyminen saavuttaa 100 %.
+Opeta Tirolle kaikki opeteltavat osa-alueet mahdollisimman selkeästi.
             """
         )
 
@@ -512,33 +478,17 @@ oppimisedistyminen saavuttaa 100 %.
     with st.expander("ℹ️ Mitä asetukset tekevät?", expanded=False):
         st.markdown(
             """
-**🧠 Päämalli**
+**🧠 Päämalli**  
+Valitsee, millä kielimallilla Tiro vastaa.  
+`gpt-4o` on laadukkaampi, `gpt-4o-mini` nopeampi ja edullisempi.
 
-Päämalli on kielimalli, jota Tiro käyttää vastatessaan keskustelussa.
+**🌡️ Lämpötila**  
+Säätää Tiron vastausten vaihtelevuutta.  
+Pienempi arvo = vakaampi. Suositus Tirolle: `0.6`.
 
-- `gpt-4o` — laadukkaampi, usein parempi päättelyssä.
-- `gpt-4o-mini` — nopeampi ja edullisempi, mutta hieman yksinkertaisempi.
-
-**🌡️ Lämpötila**
-
-Lämpötila säätää, kuinka vaihtelevasti ja luovasti Tiro vastaa.
-
-- `0.0–0.3` — hyvin vakaa ja johdonmukainen.
-- `0.4–0.7` — tasapainoinen.
-- `0.8–1.0` — uteliaampi ja vaihtelevampi.
-- `1.0–1.2` — voi olla luova, mutta myös rönsyilevä.
-
-**🔁 Maks. vuoroja**
-
-Yksi vuoro tarkoittaa yhtä käyttäjän viestiä ja yhtä Tiron vastausta.
-
-Tämä raja suojaa API-kustannuksilta. Kun raja tulee täyteen,
-Tiro ei enää vastaa ennen uuden keskustelun aloittamista.
-
-**Huomio:**
-
-Jos muutat asetuksia kesken keskustelun, ne tulevat varmasti käyttöön,
-kun aloitat uuden keskustelun.
+**🔁 Maks. vuoroja**  
+Rajoittaa keskustelun pituutta ja auttaa hallitsemaan kustannuksia.  
+Yksi vuoro = käyttäjän viesti + Tiron vastaus.
             """
         )
 
@@ -623,172 +573,150 @@ Opeta, vastaile kysymyksiin ja korjaa Tiron virhepäätelmät.
     unsafe_allow_html=True,
 )
 
-st.write("")
-
 
 # --------------------------------------------------
-# Keskustelu
+# Apufunktio: vienti Markdowniksi
 # --------------------------------------------------
 
-st.markdown("### 💬 Keskustelu työpajalla")
+def build_export_md() -> str:
+    current_state = bot.knowledge_map.model_dump()
+    current_ratio = bot.knowledge_map.completion_ratio()
 
-for msg in st.session_state.messages:
-    avatar = "🔧" if msg["role"] == "assistant" else "👷"
+    status_label = {
+        "hallussa": "Hallussa",
+        "osittain": "Osittain opittu",
+        "tuntematon": "Ei vielä opetettu",
+    }
 
-    with st.chat_message(msg["role"], avatar=avatar):
-        st.markdown(msg["content"])
+    lines = [
+        f"# Tiro — opetuskeskustelu: {topic_cfg['display_name']}",
+        "",
+        f"*Viety: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
+        "",
+        f"**Aihe:** {topic_cfg['topic_text']}  ",
+        f"**Edistyminen:** {int(current_ratio * 100)} %  ",
+        f"**Vuoroja:** {bot.turn_count}",
+        "",
+        "## Opeteltavat asiat",
+        "",
+    ]
 
+    for area, status in current_state.items():
+        readable_area = area.replace("_", " ").capitalize()
+        readable_status = status_label.get(status, status)
+        description = topic_cfg["areas"].get(area, area)
 
-# --------------------------------------------------
-# Käyttäjän syöte
-# --------------------------------------------------
-
-if prompt := st.chat_input("Opeta Tiroa..."):
-    st.session_state.messages.append(
-        {"role": "user", "content": prompt}
-    )
-
-    with st.chat_message("user", avatar="👷"):
-        st.markdown(prompt)
-
-    with st.chat_message("assistant", avatar="🔧"):
-        with st.spinner("⚙️ Tiro miettii..."):
-            reply = bot.ask(prompt)
-
-        st.markdown(reply)
-
-    st.session_state.messages.append(
-        {"role": "assistant", "content": reply}
-    )
-
-    st.rerun()
-
-
-# --------------------------------------------------
-# Toiminnot
-# --------------------------------------------------
-
-st.divider()
-st.markdown("### 🛠️ Toiminnot")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    if st.button(
-        "📝 Pyydä yhteenveto",
-        use_container_width=True,
-        disabled=len(st.session_state.messages) < 2,
-    ):
-        with st.spinner("Tiro tekee yhteenvetoa..."):
-            st.session_state.summary = bot.final_summary()
-
-        st.rerun()
-
-with col2:
-    if st.button(
-        "🎯 Tiro kokeilee taitojaan",
-        use_container_width=True,
-        disabled=len(st.session_state.messages) < 2,
-    ):
-        with st.spinner("Tiro kokoaa ajatuksiaan..."):
-            st.session_state.skill_test = bot.skill_test()
-
-        st.rerun()
-
-with col3:
-    def build_export_md() -> str:
-        current_state = bot.knowledge_map.model_dump()
-        current_ratio = bot.knowledge_map.completion_ratio()
-
-        status_label = {
-            "hallussa": "Hallussa",
-            "osittain": "Osittain opittu",
-            "tuntematon": "Ei vielä opetettu",
-        }
-
-        lines = [
-            f"# Tiro — opetuskeskustelu: {topic_cfg['display_name']}",
-            "",
-            f"*Viety: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
-            "",
-            f"**Aihe:** {topic_cfg['topic_text']}  ",
-            f"**Edistyminen:** {int(current_ratio * 100)} %  ",
-            f"**Vuoroja:** {bot.turn_count}",
-            "",
-            "## Opeteltavat asiat",
-            "",
-        ]
-
-        for area, status in current_state.items():
-            readable_area = area.replace("_", " ").capitalize()
-            readable_status = status_label.get(status, status)
-            description = topic_cfg["areas"].get(area, area)
-
-            lines.append(f"### {readable_area}")
-            lines.append("")
-            lines.append(f"- **Tila:** {readable_status}")
-            lines.append(f"- **Kuvaus:** {description}")
-            lines.append("")
-
-        lines.append("## Keskustelu")
+        lines.append(f"### {readable_area}")
+        lines.append("")
+        lines.append(f"- **Tila:** {readable_status}")
+        lines.append(f"- **Kuvaus:** {description}")
         lines.append("")
 
-        for msg in st.session_state.messages:
-            role = (
-                "🔧 **Tiro**"
-                if msg["role"] == "assistant"
-                else "👷 **Opettaja**"
-            )
-            lines.append(f"### {role}")
-            lines.append("")
-            lines.append(msg["content"])
-            lines.append("")
+    lines.append("## Keskustelu")
+    lines.append("")
 
-        if st.session_state.skill_test:
-            lines.append("## Tiron taitokoe")
-            lines.append("")
-            lines.append(st.session_state.skill_test)
-            lines.append("")
+    for msg in st.session_state.messages:
+        role = (
+            "🔧 **Tiro**"
+            if msg["role"] == "assistant"
+            else "👷 **Opettaja**"
+        )
+        lines.append(f"### {role}")
+        lines.append("")
+        lines.append(msg["content"])
+        lines.append("")
 
-        if st.session_state.summary:
-            lines.append("## Tiron yhteenveto")
-            lines.append("")
-            lines.append(st.session_state.summary)
-            lines.append("")
+    if st.session_state.skill_test:
+        lines.append("## Tiron taitokoe")
+        lines.append("")
+        lines.append(st.session_state.skill_test)
+        lines.append("")
 
-        return "\n".join(lines)
+    if st.session_state.summary:
+        lines.append("## Tiron yhteenveto")
+        lines.append("")
+        lines.append(st.session_state.summary)
+        lines.append("")
 
-    filename = (
-        f"tiro_{st.session_state.current_topic}_"
-        f"{datetime.now().strftime('%Y%m%d_%H%M')}.md"
-    )
-
-    st.download_button(
-        label="💾 Vie keskustelu (.md)",
-        data=build_export_md(),
-        file_name=filename,
-        mime="text/markdown",
-        use_container_width=True,
-        disabled=len(st.session_state.messages) < 2,
-    )
+    return "\n".join(lines)
 
 
 # --------------------------------------------------
-# Oppimisedistyminen ja opeteltavat asiat
+# Pääasettelu: keskustelu vasemmalle, paneeli oikealle
 # --------------------------------------------------
 
-st.divider()
-st.markdown("### 📊 Tiron oppimisedistyminen")
+left_col, right_col = st.columns([2.2, 1], gap="large")
 
-km = bot.knowledge_map
-ratio = km.completion_ratio()
 
-st.progress(
-    ratio,
-    text=f"Edistyminen: {int(ratio * 100)} %",
-)
+# --------------------------------------------------
+# VASEN: Keskustelu
+# --------------------------------------------------
 
-with st.expander("🔧 Opeteltavat asiat", expanded=True):
+with left_col:
+    st.markdown("### 💬 Keskustelu työpajalla")
+
+    for msg in st.session_state.messages:
+        avatar = "🔧" if msg["role"] == "assistant" else "👷"
+
+        with st.chat_message(msg["role"], avatar=avatar):
+            st.markdown(msg["content"])
+
+    if prompt := st.chat_input("Opeta Tiroa..."):
+        st.session_state.messages.append(
+            {"role": "user", "content": prompt}
+        )
+
+        with st.chat_message("user", avatar="👷"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant", avatar="🔧"):
+            with st.spinner("⚙️ Tiro miettii..."):
+                reply = bot.ask(prompt)
+
+            st.markdown(reply)
+
+        st.session_state.messages.append(
+            {"role": "assistant", "content": reply}
+        )
+
+        st.rerun()
+
+    if st.session_state.skill_test:
+        st.divider()
+        st.markdown("### 🎯 Tiron taitokoe")
+        st.markdown(st.session_state.skill_test)
+        st.caption(
+            "Arvioi vastausta seuraavassa viestissä: kerro Tirolle, "
+            "mikä meni oikein ja mitä pitää vielä opetella."
+        )
+
+    if st.session_state.summary:
+        st.divider()
+        st.markdown("### 📝 Tiron yhteenveto")
+        st.markdown(st.session_state.summary)
+
+
+# --------------------------------------------------
+# OIKEA: Opeteltavat asiat ja toiminnot
+# --------------------------------------------------
+
+with right_col:
+    # --------------------------------------------------
+    # 1. Opeteltavat asiat
+    # --------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="right-workshop-panel">
+            <h3>🔧 Opeteltavat asiat</h3>
+            <div class="right-panel-note">
+                Osa-alueet, jotka Tiron pitäisi oppia tässä keskustelussa.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     status_emoji = {
         "hallussa": "✅",
         "osittain": "🟡",
@@ -803,58 +731,80 @@ with st.expander("🔧 Opeteltavat asiat", expanded=True):
 
     state = km.model_dump()
 
-    for area, status in state.items():
-        emoji = status_emoji.get(status, "❓")
-        readable_status = status_label.get(status, status)
-        description = topic_cfg["areas"].get(area, area)
-        readable_area = area.replace("_", " ").capitalize()
+    with st.expander("Näytä opeteltavat asiat", expanded=False):
+        for area, status in state.items():
+            emoji = status_emoji.get(status, "❓")
+            readable_status = status_label.get(status, status)
+            description = topic_cfg["areas"].get(area, area)
+            readable_area = area.replace("_", " ").capitalize()
 
-        st.markdown(
-            f"""
-            <div class="learning-card">
-                <div class="learning-card-title">
-                    {emoji} {readable_area}
+            st.markdown(
+                f"""
+                <div class="learning-card">
+                    <div class="learning-card-title">
+                        {emoji} {readable_area}
+                    </div>
+                    <div class="learning-card-status">
+                        <b>Tila:</b> {readable_status}
+                    </div>
+                    <div class="learning-card-desc">
+                        {description}
+                    </div>
                 </div>
-                <div class="learning-card-status">
-                    <b>Tila:</b> {readable_status}
-                </div>
-                <div class="learning-card-desc">
-                    {description}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+                """,
+                unsafe_allow_html=True,
+            )
 
     st.caption(f"⏱️ Vuoro {bot.turn_count} / {bot.config.max_turns}")
 
-
-# --------------------------------------------------
-# Oppimisen tilaviesti
-# --------------------------------------------------
-
-if km.is_complete():
-    st.success("🎉 Tiro on oppinut kaikki osa-alueet. Hyvää työtä, mestari.")
-elif ratio >= 0.5:
-    st.info("🔧 Tiro on oppimassa hyvin. Jatka opettamista.")
-else:
-    st.warning("🛠️ Tirolla on vielä paljon opittavaa.")
-
-
-# --------------------------------------------------
-# Taitokoe ja yhteenveto
-# --------------------------------------------------
-
-if st.session_state.skill_test:
     st.divider()
-    st.markdown("### 🎯 Tiron taitokoe")
-    st.markdown(st.session_state.skill_test)
-    st.caption(
-        "Arvioi vastausta seuraavassa viestissä: kerro Tirolle, "
-        "mikä meni oikein ja mitä pitää vielä opetella."
+
+    # --------------------------------------------------
+    # 2. Toiminnot
+    # --------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="right-workshop-panel">
+            <h3>🛠️ Toiminnot</h3>
+            <div class="right-panel-note">
+                Pyydä yhteenveto, anna Tiron kokeilla taitojaan tai vie keskustelu.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-if st.session_state.summary:
-    st.divider()
-    st.markdown("### 📝 Tiron yhteenveto")
-    st.markdown(st.session_state.summary)
+    if st.button(
+        "📝 Pyydä yhteenveto",
+        use_container_width=True,
+        disabled=len(st.session_state.messages) < 2,
+    ):
+        with st.spinner("Tiro tekee yhteenvetoa..."):
+            st.session_state.summary = bot.final_summary()
+
+        st.rerun()
+
+    if st.button(
+        "🎯 Tiro kokeilee taitojaan",
+        use_container_width=True,
+        disabled=len(st.session_state.messages) < 2,
+    ):
+        with st.spinner("Tiro kokoaa ajatuksiaan..."):
+            st.session_state.skill_test = bot.skill_test()
+
+        st.rerun()
+
+    filename = (
+        f"tiro_{st.session_state.current_topic}_"
+        f"{datetime.now().strftime('%Y%m%d_%H%M')}.md"
+    )
+
+    st.download_button(
+        label="💾 Vie keskustelu tiedostona",
+        data=build_export_md(),
+        file_name=filename,
+        mime="text/markdown",
+        use_container_width=True,
+        disabled=len(st.session_state.messages) < 2,
+    )
