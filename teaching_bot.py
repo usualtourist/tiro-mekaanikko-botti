@@ -210,7 +210,7 @@ TOPIC_CONFIGS = {
 
 
 # --------------------------------------------------
-# Tiron persoonat (pikaparannus 1.3)
+# Tiron persoonat
 # --------------------------------------------------
 
 TIRO_PERSONAS = {
@@ -250,16 +250,6 @@ TIRO_PERSONAS = {
 # --------------------------------------------------
 
 class KnowledgeMap(BaseModel):
-    """
-    Dynaaminen knowledge map.
-
-    Tämä hyväksyy aihekohtaiset avaimet, esimerkiksi:
-    - tarvittavat_tyokalut
-    - vaihdon_vaiheet
-    - turvallisuus
-    - konkreettinen_esimerkki
-    """
-
     model_config = {"extra": "allow"}
 
     @classmethod
@@ -268,10 +258,8 @@ class KnowledgeMap(BaseModel):
 
     def completion_ratio(self) -> float:
         values = list(self.model_dump().values())
-
         if not values:
             return 0.0
-
         mastered = sum(1 for value in values if value == "hallussa")
         return mastered / len(values)
 
@@ -286,13 +274,11 @@ class KnowledgeMap(BaseModel):
 @dataclass
 class BotConfig:
     topic_key: str = "oljynsuodatin"
-    persona_key: str = "innokas"  # UUSI: 1.3
+    persona_key: str = "innokas"
     main_model: str = "gpt-4o"
     judge_model: str = "gpt-4o-mini"
     temperature: float = 0.6
     max_turns: int = 30
-
-    # API-kustannusten ja vastauspituuksien hallinta.
     max_output_tokens: int = 500
     judge_max_tokens: int = 250
     one_shot_max_tokens: int = 700
@@ -324,26 +310,14 @@ class TeachingBot:
             {"role": "system", "content": self._system_prompt()}
         ]
 
-        # Jatkokehitysidea:
-        # learned_facts-muisti voisi tallentaa eksplisiittisesti ne asiat,
-        # jotka käyttäjä on opettanut Tirolle. Taitokoe ja yhteenveto
-        # voitaisiin myöhemmin rakentaa ensisijaisesti learned_facts-listasta
-        # keskusteluhistorian sijaan. Tätä ei toteuteta vielä demoversiossa,
-        # jotta rakenne pysyy yksinkertaisena ja testattavana.
         self.learned_facts: list[str] = []
-
-    # --------------------------------------------------
-    # System prompt
-    # --------------------------------------------------
 
     def _system_prompt(self) -> str:
         cfg = self.config.topic_cfg
         persona = self.config.persona_cfg
 
-        # Yhdistä aihekohtainen persona_hint ja valittu persoonatyyli.
         persona_text = f"{cfg['persona_hint']} {persona['hint']}"
 
-        # Onko aihe lukioaihe? Lisää tällöin asiasisällön varmistus.
         is_lukio = cfg.get("category") == "lukio"
 
         content_check_section = ""
@@ -445,36 +419,21 @@ KIELI:
 - Vastaa samalla kielellä kuin käyttäjä.
 """.strip()
 
-    # --------------------------------------------------
-    # Julkiset apumetodit
-    # --------------------------------------------------
-
     def opening_message(self) -> str:
         return self.config.topic_cfg["opening_message"]
 
     def ask(self, user_input: str) -> str:
-        """
-        Käsittelee käyttäjän viestin.
-
-        Tärkeää:
-        - Tiro ei saa ryhtyä opettajaksi.
-        - Selkeät ohjepyynnöt ja pelkät tervehdykset käsitellään suoraan,
-          jotta malli ei lipsu antamaan ohjeita.
-        """
-
         if self.turn_count >= self.config.max_turns:
             return "[Demo on saavuttanut maksimivuoromäärän. Aloita uusi sessio.]"
 
         self.history.append({"role": "user", "content": user_input})
         self.turn_count += 1
 
-        # Suora suoja: tervehdys ei saa johtaa opetukseen.
         greeting_reply = self._handle_simple_greeting(user_input)
         if greeting_reply:
             self.history.append({"role": "assistant", "content": greeting_reply})
             return greeting_reply
 
-        # Suora suoja: jos käyttäjä pyytää ohjeita, Tiro ei saa opettaa.
         instruction_reply = self._handle_instruction_request(user_input)
         if instruction_reply:
             self.history.append({"role": "assistant", "content": instruction_reply})
@@ -487,9 +446,7 @@ KIELI:
                 temperature=self.config.temperature,
                 max_tokens=self.config.max_output_tokens,
             )
-
             reply = response.choices[0].message.content
-
         except OpenAIError:
             logger.exception("OpenAI-virhe Tiron vastauksessa")
             return (
@@ -498,19 +455,10 @@ KIELI:
             )
 
         self.history.append({"role": "assistant", "content": reply})
-
-        # Päivitetään oppimiskartta vain käyttäjän uusimman opetuksen perusteella.
         self._update_knowledge_map(user_input)
-
         return reply
 
     def monitoring_check(self) -> str:
-        """
-        Pikaparannus 1.1: SRL-monitorointi.
-
-        Tiron monitorointi-kysymys keskellä keskustelua.
-        Käyttäjä voi tilata tämän napilla, esim. vuoron 5 jälkeen.
-        """
         cfg = self.config.topic_cfg
 
         prompt = f"""
@@ -528,10 +476,7 @@ SÄÄNNÖT:
 """
 
         reply = self._one_shot(prompt, temperature=0.4)
-
-        # Lisää monitoring-vastaus historiaan, jotta Tiro pysyy kontekstissa.
         self.history.append({"role": "assistant", "content": reply})
-
         return reply
 
     def final_summary(self) -> str:
@@ -554,7 +499,6 @@ SÄÄNNÖT:
   Esim. "Mikä oli sinusta vaikeinta selittää?"
 - Lopuksi kiitä opettajaa.
 """
-
         return self._one_shot(prompt, temperature=0.4)
 
     def skill_test(self) -> str:
@@ -580,36 +524,19 @@ SÄÄNNÖT:
 - Lopuksi pyydä opettajaa arvioimaan, menikö oikein.
 - Vastaa samalla kielellä kuin käyttäjä on käyttänyt.
 """
-
         return self._one_shot(prompt, temperature=0.3)
 
-    # --------------------------------------------------
-    # Suojat: tervehdys ja ohjepyyntö
-    # --------------------------------------------------
-
     def _handle_simple_greeting(self, user_input: str) -> str | None:
-        """
-        Estää tilanteen, jossa Tiro alkaa opettaa käyttäjää pelkän tervehdyksen jälkeen.
-        """
-
         text = user_input.strip().lower()
         words = text.replace("!", " ").replace("?", " ").replace(",", " ").split()
 
         greeting_words = {
-            "hei",
-            "moi",
-            "moikka",
-            "terve",
-            "heippa",
-            "hello",
-            "hi",
-            "hey",
+            "hei", "moi", "moikka", "terve", "heippa",
+            "hello", "hi", "hey",
         }
 
-        # Jos viesti on lyhyt ja sisältää tervehdyksen, käsitellään se tervehdyksenä.
         if len(words) <= 6 and any(word in greeting_words for word in words):
             cfg = self.config.topic_cfg
-
             return (
                 f"Moi! Olen Tiro, oppilas. "
                 f"En osaa vielä aihetta {cfg['topic_text']}, joten tarvitsen opetusta. "
@@ -619,38 +546,16 @@ SÄÄNNÖT:
         return None
 
     def _handle_instruction_request(self, user_input: str) -> str | None:
-        """
-        Estää tilanteen, jossa käyttäjä pyytää ohjetta ja Tiro alkaa opettaa.
-        """
-
         text = user_input.strip().lower()
 
         instruction_keywords = [
-            # suomi
-            "miten vaihdetaan",
-            "miten tämä tehdään",
-            "miten se tehdään",
-            "miten tehdään",
-            "opeta minulle",
-            "opeta mulle",
-            "kerro miten",
-            "kerro minulle miten",
-            "mitä tarvitaan",
-            "mitä työkaluja",
-            "anna ohje",
-            "anna ohjeet",
-            "ohjeet",
-            "neuvo minua",
-            "neuvo miten",
-            "kuinka vaihdetaan",
-            "kuinka tämä tehdään",
-            # englanti
-            "how do i",
-            "how to",
-            "teach me",
-            "what do i need",
-            "give me instructions",
-            "instructions",
+            "miten vaihdetaan", "miten tämä tehdään", "miten se tehdään",
+            "miten tehdään", "opeta minulle", "opeta mulle", "kerro miten",
+            "kerro minulle miten", "mitä tarvitaan", "mitä työkaluja",
+            "anna ohje", "anna ohjeet", "ohjeet", "neuvo minua",
+            "neuvo miten", "kuinka vaihdetaan", "kuinka tämä tehdään",
+            "how do i", "how to", "teach me", "what do i need",
+            "give me instructions", "instructions",
         ]
 
         if any(keyword in text for keyword in instruction_keywords):
@@ -660,10 +565,6 @@ SÄÄNNÖT:
             )
 
         return None
-
-    # --------------------------------------------------
-    # Knowledge map -päivitys
-    # --------------------------------------------------
 
     def _update_knowledge_map(self, user_input: str) -> None:
         cfg = self.config.topic_cfg
@@ -722,7 +623,6 @@ Sallitut arvot:
                 temperature=0.0,
                 max_tokens=self.config.judge_max_tokens,
             )
-
             data = json.loads(res.choices[0].message.content)
 
             cleaned = {
@@ -734,13 +634,8 @@ Sallitut arvot:
 
         except (OpenAIError, json.JSONDecodeError, ValueError) as e:
             logger.warning("Knowledge map -päivitys epäonnistui: %s", e)
-            # Säilytetään aiempi tila.
 
     def _normalize_status(self, value: str) -> str:
-        """
-        Varmistaa, että KnowledgeMapin arvot ovat vain sallittuja arvoja.
-        """
-
         allowed = {"tuntematon", "osittain", "hallussa"}
 
         if not isinstance(value, str):
@@ -753,10 +648,6 @@ Sallitut arvot:
 
         return "tuntematon"
 
-    # --------------------------------------------------
-    # Yhden kutsun apumetodi
-    # --------------------------------------------------
-
     def _one_shot(self, prompt: str, temperature: float = 0.4) -> str:
         msgs = self.history + [{"role": "user", "content": prompt}]
 
@@ -767,9 +658,7 @@ Sallitut arvot:
                 temperature=temperature,
                 max_tokens=self.config.one_shot_max_tokens,
             )
-
             return res.choices[0].message.content
-
         except OpenAIError:
             logger.exception("One-shot-kutsu epäonnistui")
             return (
