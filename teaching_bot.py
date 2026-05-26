@@ -155,6 +155,11 @@ class BotConfig:
     temperature: float = 0.6
     max_turns: int = 30
 
+    # API-kustannusten ja vastauspituuksien hallinta.
+    max_output_tokens: int = 500
+    judge_max_tokens: int = 250
+    one_shot_max_tokens: int = 700
+
     @property
     def topic_cfg(self) -> dict:
         return TOPIC_CONFIGS[self.topic_key]
@@ -177,6 +182,14 @@ class TeachingBot:
         self.history: list[dict] = [
             {"role": "system", "content": self._system_prompt()}
         ]
+
+        # Jatkokehitysidea:
+        # learned_facts-muisti voisi tallentaa eksplisiittisesti ne asiat,
+        # jotka käyttäjä on opettanut Tirolle. Taitokoe ja yhteenveto
+        # voitaisiin myöhemmin rakentaa ensisijaisesti learned_facts-listasta
+        # keskusteluhistorian sijaan. Tätä ei toteuteta vielä demoversiossa,
+        # jotta rakenne pysyy yksinkertaisena ja testattavana.
+        self.learned_facts: list[str] = []
 
     # --------------------------------------------------
     # System prompt
@@ -219,6 +232,14 @@ KIELLETYT VASTAUSTAVAT:
 - Älä käytä numeroitua ohjelistaa, paitsi jos käyttäjä pyytää sinua kokeilemaan taitojasi ja kyseessä on erillinen taitokoe.
 - Älä korjaa käyttäjää asiantuntijana. Jos jokin kuulostaa oudolta tai vaaralliselta, kysy varovasti tarkennusta.
 
+TURVALLISUUS:
+- Autojen huoltotöissä voi olla todellisia turvallisuusriskejä.
+- Jos käyttäjän opetus vaikuttaa vaaralliselta, ristiriitaiselta tai puutteelliselta turvallisuuden kannalta, älä vahvista sitä varmasti opituksi.
+- Tällöin sano varovasti, että et ole varma ymmärsitkö oikein, ja kysy tarkentava kysymys.
+- Voit myös sanoa oppilaan roolissa, että asia pitäisi varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
+- Älä kuitenkaan ala itse antaa oikeita turvallisuusohjeita omasta tiedostasi.
+- Älä tee vaarallisesta toimintatavasta normaalia tai suositeltavaa.
+
 JOS KÄYTTÄJÄ KYSYY SINULTA OHJETTA:
 Jos käyttäjä kysyy esimerkiksi "miten tämä tehdään?", "mitä työkaluja tarvitaan?", "opeta minulle" tai "anna ohje",
 vastaa tähän tyyliin:
@@ -232,6 +253,7 @@ VIRHEPÄÄTELMÄT:
 - Voit toisinaan tehdä pienen loogisen virhepäätelmän ({cfg['error_hint']}), jotta käyttäjä voi korjata sinua.
 - Tee virhepäätelmä vain kysymyksen muodossa, älä ohjeena.
 - Älä tee virhepäätelmää liian usein.
+- Älä tee virhepäätelmää, joka voisi kannustaa vaaralliseen toimintaan ilman varovaista muotoilua.
 
 VASTAUKSEN PITUUS:
 - Pidä vastaukset lyhyinä: enintään 2–4 lausetta.
@@ -281,13 +303,17 @@ KIELI:
                 model=self.config.main_model,
                 messages=self.history,
                 temperature=self.config.temperature,
+                max_tokens=self.config.max_output_tokens,
             )
 
             reply = response.choices[0].message.content
 
-        except OpenAIError as e:
+        except OpenAIError:
             logger.exception("OpenAI-virhe Tiron vastauksessa")
-            return f"[Virhe Tiron vastauksessa: {e}]"
+            return (
+                "[Tiro ei juuri nyt saanut muodostettua vastausta. "
+                "Yritä hetken kuluttua uudelleen.]"
+            )
 
         self.history.append({"role": "assistant", "content": reply})
 
@@ -308,6 +334,7 @@ SÄÄNNÖT:
 - Älä lisää mitään, mitä käyttäjä ei sanonut.
 - Älä täydennä puuttuvia kohtia omasta tiedostasi.
 - Jos jokin asia jäi epäselväksi, sano että se jäi epäselväksi.
+- Jos jokin käyttäjän opettama asia vaikutti turvallisuuden kannalta epävarmalta, sano että se pitäisi varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
 - Käytä omaa ääntäsi: olet Tiro, mekaanikko-oppilas.
 - Lopuksi kiitä opettajaa.
 """
@@ -324,10 +351,14 @@ Kuvaile omin sanoin, vaihe vaiheelta, miten aihe "{cfg['topic_text']}" tehdään
 SÄÄNNÖT:
 - Käytä VAIN sitä tietoa, jota käyttäjä on tähän mennessä opettanut.
 - Älä lisää puuttuvia vaiheita omasta tiedostasi.
+- Älä arvaa puuttuvia vaiheita.
+- Jos et ole täysin varma, että käyttäjä on opettanut tietyn vaiheen, merkitse se puuttuvaksi.
+- Älä täydennä vastausta yleisellä tiedolla, valmistajan ohjeilla tai omalla taustatiedollasi.
 - Jos jokin osa-alue on jäänyt epäselväksi, sano rehellisesti:
   "tätä en vielä osaa" tai "tästä en ole varma".
 - Käytä numeroitua listaa vain tässä taitokokeessa.
 - Mainitse turvallisuusnäkökulmat vain, jos käyttäjä on opettanut niitä.
+- Jos turvallisuus jäi epäselväksi, sano että turvallisuus pitää vielä varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
 - Lopuksi pyydä opettajaa arvioimaan, menikö oikein.
 - Vastaa samalla kielellä kuin käyttäjä on käyttänyt.
 """
@@ -444,6 +475,9 @@ Arviointisääntö:
 - Käytä arvoa "tuntematon", jos käyttäjä ei opettanut kyseistä osa-aluetta lainkaan.
 - Älä päättele osaamista omasta tiedostasi. Arvioi vain käyttäjän viestin perusteella ja nykyisen tilan pohjalta.
 - Älä poista aiemmin opittua asiaa, ellei käyttäjän uusin viesti selvästi kumoa sitä.
+- Jos käyttäjän opetus vaikuttaa turvallisuuden kannalta vaaralliselta, ristiriitaiselta tai olennaisesti puutteelliselta, älä merkitse kyseistä turvallisuuteen liittyvää osa-aluetta arvoon "hallussa".
+- Jos turvallisuutta sivutaan mutta ohje jää puutteelliseksi, käytä mieluummin arvoa "osittain" kuin "hallussa".
+- Älä merkitse vaarallista tai virheellistä toimintatapaa opituksi varmana osaamisena.
 
 Palauta JSON, jossa ovat täsmälleen nämä avaimet:
 {keys}
@@ -458,6 +492,7 @@ Sallitut arvot:
                 messages=[{"role": "system", "content": check_prompt}],
                 response_format={"type": "json_object"},
                 temperature=0.0,
+                max_tokens=self.config.judge_max_tokens,
             )
 
             data = json.loads(res.choices[0].message.content)
@@ -502,10 +537,14 @@ Sallitut arvot:
                 model=self.config.main_model,
                 messages=msgs,
                 temperature=temperature,
+                max_tokens=self.config.one_shot_max_tokens,
             )
 
             return res.choices[0].message.content
 
-        except OpenAIError as e:
+        except OpenAIError:
             logger.exception("One-shot-kutsu epäonnistui")
-            return f"[Virhe: {e}]"
+            return (
+                "[Tiro ei juuri nyt saanut muodostettua vastausta. "
+                "Yritä hetken kuluttua uudelleen.]"
+            )

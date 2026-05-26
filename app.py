@@ -329,6 +329,9 @@ def init_bot(topic_key: str) -> TeachingBot:
         judge_model="gpt-4o-mini",
         temperature=st.session_state.get("temperature", 0.6),
         max_turns=st.session_state.get("max_turns", 30),
+        max_output_tokens=500,
+        judge_max_tokens=250,
+        one_shot_max_tokens=700,
     )
 
     return TeachingBot(client, config)
@@ -447,6 +450,12 @@ Sinun tehtäväsi on opettaa hänelle valittu huoltotehtävä.
 **Tavoite:**
 
 Opeta Tirolle kaikki opeteltavat osa-alueet mahdollisimman selkeästi.
+
+**Turvallisuus:**
+
+Autojen huoltotöissä voi olla todellisia turvallisuusriskejä. Käytä
+yleisluontoisia opetusesimerkkejä ja varmista oikeat työohjeet aina
+opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
             """
         )
 
@@ -492,6 +501,10 @@ Pienempi arvo = vakaampi. Suositus Tirolle: `0.6`.
 **🔁 Maks. vuoroja**  
 Rajoittaa keskustelun pituutta ja auttaa hallitsemaan kustannuksia.  
 Yksi vuoro = käyttäjän viesti + Tiron vastaus.
+
+**Tekninen vastausraja**  
+Tiron yksittäisiä vastauksia rajoitetaan lisäksi `max_tokens`-asetuksilla
+koodin puolella, jotta kustannukset ja vastausten pituus pysyvät hallinnassa.
             """
         )
 
@@ -532,11 +545,11 @@ Yksi vuoro = käyttäjän viesti + Tiron vastaus.
 
     st.divider()
 
-    st.caption("🔩 Tiro v1.0 — opetettava mekaanikko-oppilas")
+    st.caption("🔩 Tiro v1.1 — opetettava mekaanikko-oppilas")
 
 
 # --------------------------------------------------
-# Tietoturvasuostumus (näytetään ennen botin käyttöä)
+# Tietoturvasuostumus
 # --------------------------------------------------
 
 st.markdown("# 🔩 TIRO")
@@ -550,10 +563,16 @@ Tiro käyttää OpenAI:n kielimallia. Kaikki viestit, jotka kirjoitat,
 **lähetetään OpenAI:n palveluun käsiteltäväksi**.
 
 **Älä syötä:**
+
 - henkilötietoja (oma tai muiden)
 - terveystietoja tai muita arkaluonteisia tietoja
 - salasanoja tai API-avaimia
 - salassa pidettävää työ- tai opiskelumateriaalia
+
+**Turvallisuushuomio:**
+
+Tiro on demo ja pedagoginen harjoitusväline. Se ei korvaa opettajaa,
+huolto-ohjetta, valmistajan ohjeita tai työturvallisuusohjeita.
 
 OpenAI:n tietoturva- ja yksityisyysperiaatteet löydät täältä:  
 [https://openai.com/fi-FI/security-and-privacy/](https://openai.com/fi-FI/security-and-privacy/)
@@ -604,7 +623,9 @@ st.markdown(
 <div class="tiro-workshop-banner">
 🔧 <b>Mekaanikko-oppilas Tiro</b> on tullut työpajalle oppimaan aihetta
 <code>{topic_cfg['topic_text']}</code>. Sinä toimit kokeneempana opettajana.
-Opeta, vastaile kysymyksiin ja korjaa Tiron virhepäätelmät.
+Opeta, vastaile kysymyksiin ja korjaa Tiron virhepäätelmät.<br><br>
+<b>Huomio:</b> Tiro on oppimisen harjoitusväline. Todelliset huoltotyöt
+tulee tehdä opettajan, huolto-ohjeen ja työturvallisuusohjeiden mukaisesti.
 </div>
 """,
     unsafe_allow_html=True,
@@ -704,6 +725,11 @@ with left_col:
             st.markdown(msg["content"])
 
     if prompt := st.chat_input("Opeta Tiroa..."):
+        # UI-tason vuororajoitus ennen kuin viesti lähetetään botille.
+        if bot.turn_count >= bot.config.max_turns:
+            st.error("Maksimivuoromäärä on saavutettu. Aloita uusi keskustelu.")
+            st.stop()
+
         st.session_state.messages.append(
             {"role": "user", "content": prompt}
         )
