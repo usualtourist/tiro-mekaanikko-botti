@@ -1,11 +1,18 @@
+import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from teaching_bot import TeachingBot, BotConfig, TOPIC_CONFIGS
+from teaching_bot import (
+    TeachingBot,
+    BotConfig,
+    TOPIC_CONFIGS,
+    TIRO_PERSONAS,
+)
 
 
 # --------------------------------------------------
@@ -15,7 +22,7 @@ from teaching_bot import TeachingBot, BotConfig, TOPIC_CONFIGS
 load_dotenv()
 
 st.set_page_config(
-    page_title="Tiro — Mekaanikko-oppilas",
+    page_title="Tiro — Opetettava oppilas",
     page_icon="🔩",
     layout="wide",
 )
@@ -325,6 +332,7 @@ def init_bot(topic_key: str) -> TeachingBot:
 
     config = BotConfig(
         topic_key=topic_key,
+        persona_key=st.session_state.get("persona_key", "innokas"),
         main_model=st.session_state.get("main_model", "gpt-4o"),
         judge_model="gpt-4o-mini",
         temperature=st.session_state.get("temperature", 0.6),
@@ -355,6 +363,40 @@ def reset_session(topic_key: str) -> None:
 
 
 # --------------------------------------------------
+# Palautteen tallennus (pikaparannus 1.4)
+# --------------------------------------------------
+
+def save_feedback(feedback_data: dict) -> None:
+    """
+    Tallentaa palautteen paikalliseen JSON-tiedostoon.
+    Jokainen palaute lisätään listaan.
+
+    Huom: Streamlit Cloudissa tiedosto ei säily sovelluksen
+    uudelleenkäynnistyksissä. Paikallisessa kehityksessä tämä toimii hyvin.
+    """
+    feedback_file = Path("tiro_feedback.json")
+
+    feedback_data["timestamp"] = datetime.now().isoformat()
+    feedback_data["topic"] = st.session_state.current_topic
+    feedback_data["persona"] = st.session_state.get("persona_key", "innokas")
+    feedback_data["turn_count"] = st.session_state.bot.turn_count if st.session_state.bot else 0
+
+    if feedback_file.exists():
+        try:
+            existing = json.loads(feedback_file.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            existing = []
+    else:
+        existing = []
+
+    existing.append(feedback_data)
+    feedback_file.write_text(
+        json.dumps(existing, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+# --------------------------------------------------
 # Session state
 # --------------------------------------------------
 
@@ -364,6 +406,7 @@ for key, default in [
     ("summary", None),
     ("skill_test", None),
     ("current_topic", "oljynsuodatin"),
+    ("persona_key", "innokas"),
     ("main_model", "gpt-4o"),
     ("temperature", 0.6),
     ("max_turns", 30),
@@ -378,7 +421,7 @@ for key, default in [
 # --------------------------------------------------
 
 with st.sidebar:
-    st.markdown("## 🔧 Työpaja")
+    st.markdown("## 🔧 Työpaja & luokka")
 
     st.warning(
         "🔒 **Tietoturva:** Viestit lähetetään OpenAI:lle käsiteltäväksi. "
@@ -392,37 +435,25 @@ with st.sidebar:
 
 Tiro käyttää OpenAI:n kielimallia. Kaikki kirjoittamasi viestit
 lähetetään OpenAI:n palveluun käsiteltäväksi vastausta varten.
-Viestit voivat kulkea OpenAI:n palvelimien kautta esimerkiksi
-Yhdysvalloissa.
 
 **OpenAI:n tietoturva- ja yksityisyysperiaatteet:**  
 [https://openai.com/fi-FI/security-and-privacy/](https://openai.com/fi-FI/security-and-privacy/)
 
 **Mitä EI saa syöttää:**
 
-- Henkilötietoja, kuten nimi, henkilötunnus, osoite, puhelinnumero,
-  sähköposti tai syntymäaika.
+- Henkilötietoja (nimi, yhteystiedot, henkilötunnus).
 - Tunnistettavia tietoja muista henkilöistä.
 - Terveystietoja tai muita arkaluonteisia tietoja.
 - Salasanoja, API-avaimia tai muita salaisuuksia.
 - Salassa pidettävää työ- tai opiskelumateriaalia.
 
-**Mitä voi syöttää:**
-
-- Yleisiä opetustekstejä ja kuvauksia työvaiheista.
-- Yleisluontoisia esimerkkejä ilman henkilöitä.
-- Teknisiä termejä ja yleistä keskustelua aiheesta.
-
 **Vinkki:**
 
-Jos haluat käyttää esimerkkitilannetta, käytä keksittyjä henkilöitä
-ja yleisiä paikkoja, esimerkiksi "asiakas tuo auton" tai
-"oppilas korjaajakoulussa".
+Käytä keksittyjä henkilöitä ja yleisiä paikkoja esimerkeissä.
 
 **Vastuu:**
 
-Vastaat itse siitä, mitä syötät palveluun. Älä jaa tietoja, joita
-et haluaisi ulkopuolisen näkevän.
+Vastaat itse siitä, mitä syötät palveluun.
             """
         )
 
@@ -433,19 +464,20 @@ et haluaisi ulkopuolisen näkevän.
             """
 **Mikä Tiro on?**
 
-Tiro on opetettava mekaanikko-oppilas. Hän ei ole opettaja, vaan oppilas.
-Sinun tehtäväsi on opettaa hänelle valittu huoltotehtävä.
+Tiro on opetettava oppilas. Hän ei ole opettaja, vaan oppilas, jolle
+sinä opetat valitun aiheen.
 
 **Näin käytät bottia:**
 
 1. Hyväksy tietoturvahuomio aloitusnäkymässä.
 2. Valitse opeteltava aihe.
-3. Lue Tiron aloitusviesti.
-4. Kirjoita opetuksesi keskustelukenttään.
-5. Vastaa Tiron jatkokysymyksiin.
-6. Korjaa Tiroa, jos hän tekee virhepäätelmän.
-7. Tarkista opeteltavat asiat oikeasta paneelista.
-8. Pyydä Tiroa kokeilemaan taitojaan, kun olet valmis.
+3. Valitse Tiron persoona (vaikuttaa siihen, miten Tiro reagoi).
+4. Lue Tiron aloitusviesti.
+5. Kirjoita opetuksesi keskustelukenttään.
+6. Vastaa Tiron jatkokysymyksiin.
+7. Korjaa Tiroa, jos hän tekee virhepäätelmän.
+8. Tarkista opeteltavat asiat oikeasta paneelista.
+9. Pyydä Tiroa kokeilemaan taitojaan, kun olet valmis.
 
 **Tavoite:**
 
@@ -453,28 +485,66 @@ Opeta Tirolle kaikki opeteltavat osa-alueet mahdollisimman selkeästi.
 
 **Turvallisuus:**
 
-Autojen huoltotöissä voi olla todellisia turvallisuusriskejä. Käytä
-yleisluontoisia opetusesimerkkejä ja varmista oikeat työohjeet aina
-opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
+Autojen huoltotöissä ja lukioaineissa voi olla virhe- tai turvallisuusriskejä.
+Varmista oikeat tiedot opettajalta tai luotettavasta lähteestä.
             """
         )
 
     st.divider()
 
-    st.markdown("### 🚗 Aihe")
+    # ----------------------------------------
+    # AIHE — kategorisointi (osa C)
+    # ----------------------------------------
 
-    topic_options = {k: v["display_name"] for k, v in TOPIC_CONFIGS.items()}
+    st.markdown("### 📚 Aihe")
 
-    selected_topic = st.selectbox(
+    # Rakenna aihekategoriat dynaamisesti TOPIC_CONFIGS:n perusteella.
+    topic_categories: dict[str, list[str]] = {}
+    for key, cfg in TOPIC_CONFIGS.items():
+        category = cfg.get("category", "muu")
+        category_label = {
+            "ammattikoulu": "Ammattikoulu — auton huolto",
+            "lukio": "Lukio",
+            "muu": "Muu",
+        }.get(category, "Muu")
+
+        topic_categories.setdefault(category_label, []).append(key)
+
+    # Rakenna selectboxin näyttömuoto ja avainmappays.
+    display_options: list[str] = []
+    key_mapping: dict[str, str] = {}
+
+    for category, keys in topic_categories.items():
+        for key in keys:
+            short_category = category.split("—")[0].strip()
+            display_label = (
+                f"[{short_category}] {TOPIC_CONFIGS[key]['display_name']}"
+            )
+            display_options.append(display_label)
+            key_mapping[display_label] = key
+
+    # Etsi nykyisen aiheen näyttömuoto.
+    current_display = None
+    for label, key in key_mapping.items():
+        if key == st.session_state.current_topic:
+            current_display = label
+            break
+
+    if current_display is None:
+        current_display = display_options[0]
+
+    selected_display = st.selectbox(
         "Mitä Tiro opettelee?",
-        options=list(topic_options.keys()),
-        format_func=lambda k: topic_options[k],
-        index=list(topic_options.keys()).index(st.session_state.current_topic),
+        options=display_options,
+        index=display_options.index(current_display),
         help=(
-            "Valitse opetettava huoltotehtävä. "
-            "Aiheen vaihtaminen aloittaa uuden keskustelun."
+            "Ammattikoulun aiheet ovat huoltotehtäviä. "
+            "Lukion aiheet liittyvät opiskelutaitoihin ja aineenhallintaan. "
+            "Aiheen vaihto aloittaa uuden keskustelun."
         ),
     )
+
+    selected_topic = key_mapping[selected_display]
 
     if selected_topic != st.session_state.current_topic:
         st.warning("Aihe vaihtuu vasta, kun painat alla olevaa nappia.")
@@ -482,6 +552,33 @@ opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
         if st.button("🔄 Vaihda aihe", use_container_width=True):
             reset_session(selected_topic)
             st.rerun()
+
+    st.divider()
+
+    # ----------------------------------------
+    # PERSOONA (pikaparannus 1.3)
+    # ----------------------------------------
+
+    st.markdown("### 🎭 Tiron persoona")
+
+    persona_options = {k: v["display_name"] for k, v in TIRO_PERSONAS.items()}
+
+    selected_persona = st.selectbox(
+        "Millainen Tiro on?",
+        options=list(persona_options.keys()),
+        format_func=lambda k: persona_options[k],
+        index=list(persona_options.keys()).index(
+            st.session_state.get("persona_key", "innokas")
+        ),
+        help=(
+            "Tiron persoona vaikuttaa siihen, miten hän reagoi opetukseen. "
+            "Persoona vaihtuu, kun aloitat uuden keskustelun."
+        ),
+    )
+
+    if selected_persona != st.session_state.get("persona_key", "innokas"):
+        st.session_state["persona_key"] = selected_persona
+        st.caption("Persoona vaihtuu uudessa keskustelussa.")
 
     st.divider()
 
@@ -496,15 +593,14 @@ Valitsee, millä kielimallilla Tiro vastaa.
 
 **🌡️ Lämpötila**  
 Säätää Tiron vastausten vaihtelevuutta.  
-Pienempi arvo = vakaampi. Suositus Tirolle: `0.6`.
+Suositus: `0.6`.
 
 **🔁 Maks. vuoroja**  
-Rajoittaa keskustelun pituutta ja auttaa hallitsemaan kustannuksia.  
-Yksi vuoro = käyttäjän viesti + Tiron vastaus.
+Rajoittaa keskustelun pituutta ja auttaa hallitsemaan kustannuksia.
 
 **Tekninen vastausraja**  
 Tiron yksittäisiä vastauksia rajoitetaan lisäksi `max_tokens`-asetuksilla
-koodin puolella, jotta kustannukset ja vastausten pituus pysyvät hallinnassa.
+koodin puolella.
             """
         )
 
@@ -545,7 +641,7 @@ koodin puolella, jotta kustannukset ja vastausten pituus pysyvät hallinnassa.
 
     st.divider()
 
-    st.caption("🔩 Tiro v1.1 — opetettava mekaanikko-oppilas")
+    st.caption("🔩 Tiro v1.2 — opetettava oppilas (lukio + ammattikoulu)")
 
 
 # --------------------------------------------------
@@ -572,12 +668,10 @@ Tiro käyttää OpenAI:n kielimallia. Kaikki viestit, jotka kirjoitat,
 **Turvallisuushuomio:**
 
 Tiro on demo ja pedagoginen harjoitusväline. Se ei korvaa opettajaa,
-huolto-ohjetta, valmistajan ohjeita tai työturvallisuusohjeita.
+huolto-ohjeita eikä työturvallisuusohjeita.
 
-OpenAI:n tietoturva- ja yksityisyysperiaatteet löydät täältä:  
+OpenAI:n tietoturva- ja yksityisyysperiaatteet:  
 [https://openai.com/fi-FI/security-and-privacy/](https://openai.com/fi-FI/security-and-privacy/)
-
-Vastuu siitä, mitä palveluun syötät, on käyttäjällä.
         """
     )
 
@@ -608,6 +702,7 @@ if st.session_state.bot is None:
 
 bot: TeachingBot = st.session_state.bot
 topic_cfg = bot.config.topic_cfg
+persona_cfg = bot.config.persona_cfg
 km = bot.knowledge_map
 ratio = km.completion_ratio()
 
@@ -616,16 +711,19 @@ ratio = km.completion_ratio()
 # Otsikko ja banneri
 # --------------------------------------------------
 
-st.markdown(f"### `> Tehtävä: {topic_cfg['display_name']}`")
+st.markdown(
+    f"### `> Tehtävä: {topic_cfg['display_name']}` "
+    f"`| Persoona: {persona_cfg['display_name']}`"
+)
 
 st.markdown(
     f"""
 <div class="tiro-workshop-banner">
-🔧 <b>Mekaanikko-oppilas Tiro</b> on tullut työpajalle oppimaan aihetta
+🔧 <b>Opetettava oppilas Tiro</b> on tullut oppimaan aihetta
 <code>{topic_cfg['topic_text']}</code>. Sinä toimit kokeneempana opettajana.
 Opeta, vastaile kysymyksiin ja korjaa Tiron virhepäätelmät.<br><br>
-<b>Huomio:</b> Tiro on oppimisen harjoitusväline. Todelliset huoltotyöt
-tulee tehdä opettajan, huolto-ohjeen ja työturvallisuusohjeiden mukaisesti.
+<b>Huomio:</b> Tiro on oppimisen harjoitusväline. Todelliset työtehtävät
+ja asiasisältö tulee varmistaa opettajalta, oppikirjasta tai luotettavasta lähteestä.
 </div>
 """,
     unsafe_allow_html=True,
@@ -652,6 +750,7 @@ def build_export_md() -> str:
         f"*Viety: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
         "",
         f"**Aihe:** {topic_cfg['topic_text']}  ",
+        f"**Persoona:** {persona_cfg['display_name']}  ",
         f"**Edistyminen:** {int(current_ratio * 100)} %  ",
         f"**Vuoroja:** {bot.turn_count}",
         "",
@@ -711,7 +810,7 @@ left_col, right_col = st.columns([2.2, 1], gap="large")
 # --------------------------------------------------
 
 with left_col:
-    st.markdown("### 💬 Keskustelu työpajalla")
+    st.markdown("### 💬 Keskustelu Tiron kanssa")
 
     st.caption(
         "🔒 Älä syötä henkilötietoja tai arkaluonteisia tietoja. "
@@ -765,14 +864,14 @@ with left_col:
 
 
 # --------------------------------------------------
-# OIKEA: Opeteltavat asiat ja toiminnot
+# OIKEA: Opeteltavat asiat, toiminnot ja palaute
 # --------------------------------------------------
 
 with right_col:
     st.markdown(
         """
         <div class="right-workshop-panel">
-            <h3>🔧 Opeteltavat asiat</h3>
+            <h3>📚 Opeteltavat asiat</h3>
             <div class="right-panel-note">
                 Osa-alueet, jotka Tiron pitäisi oppia tässä keskustelussa.
             </div>
@@ -828,12 +927,27 @@ with right_col:
         <div class="right-workshop-panel">
             <h3>🛠️ Toiminnot</h3>
             <div class="right-panel-note">
-                Pyydä yhteenveto, anna Tiron kokeilla taitojaan tai vie keskustelu.
+                Pyydä yhteenveto, anna Tiron kokeilla taitojaan, tarkista 
+                opetuksen kulkua tai vie keskustelu.
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
+    # Pikaparannus 1.1: monitorointinappi.
+    if st.button(
+        "⏸️ Tiro tarkistaa hetken",
+        use_container_width=True,
+        disabled=len(st.session_state.messages) < 4,
+    ):
+        with st.spinner("Tiro miettii..."):
+            monitoring_msg = bot.monitoring_check()
+            st.session_state.messages.append(
+                {"role": "assistant", "content": monitoring_msg}
+            )
+
+        st.rerun()
 
     if st.button(
         "📝 Pyydä yhteenveto",
@@ -868,3 +982,55 @@ with right_col:
         use_container_width=True,
         disabled=len(st.session_state.messages) < 2,
     )
+
+    st.divider()
+
+    # Pikaparannus 1.4: palautelomake.
+    st.markdown(
+        """
+        <div class="right-workshop-panel">
+            <h3>💬 Anna palautetta</h3>
+            <div class="right-panel-note">
+                Auta Tiron kehittämistä. Palaute tallennetaan anonyymisti
+                paikalliseen tiedostoon.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    with st.expander("Avaa palautelomake", expanded=False):
+        with st.form("feedback_form", clear_on_submit=True):
+            positives = st.text_area(
+                "Mikä Tiron vastauksissa toimi hyvin?",
+                placeholder="Esim. Tiro pysyi hyvin oppilaan roolissa...",
+            )
+
+            negatives = st.text_area(
+                "Mikä ei toiminut?",
+                placeholder="Esim. Tiro tarjosi neuvoja vaikka ei pitäisi...",
+            )
+
+            role_lapses = st.radio(
+                "Lipsuiko Tiro oppilaan roolista?",
+                options=["Ei", "Vähän", "Selvästi"],
+                horizontal=True,
+            )
+
+            overall = st.slider(
+                "Yleisarvio Tirosta (1=heikko, 5=erinomainen)",
+                min_value=1,
+                max_value=5,
+                value=3,
+            )
+
+            submitted = st.form_submit_button("Lähetä palaute")
+
+            if submitted:
+                save_feedback({
+                    "positives": positives,
+                    "negatives": negatives,
+                    "role_lapses": role_lapses,
+                    "overall": overall,
+                })
+                st.success("Kiitos palautteesta! Se on tallennettu.")

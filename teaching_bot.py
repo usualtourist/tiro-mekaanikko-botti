@@ -13,9 +13,11 @@ logger = logging.getLogger(__name__)
 # --------------------------------------------------
 
 TOPIC_CONFIGS = {
+    # ----- Ammattikoulun aiheet -----
     "oljynsuodatin": {
         "display_name": "Öljynsuodattimen vaihto",
         "topic_text": "öljynsuodattimen vaihto",
+        "category": "ammattikoulu",
         "persona_hint": (
             "Et tiedä öljynsuodattimen vaihdosta juuri mitään. "
             "Et ole koskaan itse vaihtanut öljynsuodatinta. "
@@ -47,6 +49,7 @@ TOPIC_CONFIGS = {
     "renkaat": {
         "display_name": "Renkaiden vaihto",
         "topic_text": "renkaiden vaihto",
+        "category": "ammattikoulu",
         "persona_hint": (
             "Et tiedä renkaiden vaihdosta juuri mitään. "
             "Et ole itse vaihtanut auton renkaita. "
@@ -78,6 +81,7 @@ TOPIC_CONFIGS = {
     "lamppu": {
         "display_name": "Lampun vaihto (auton ajovalo)",
         "topic_text": "auton ajovalon lampun vaihto",
+        "category": "ammattikoulu",
         "persona_hint": (
             "Et tiedä auton ajovalon lampun vaihdosta juuri mitään. "
             "Et ole itse vaihtanut ajovalon lamppua. "
@@ -105,6 +109,138 @@ TOPIC_CONFIGS = {
                 "Konkreettinen esimerkki lampun vaihdosta, esimerkiksi H7-lampun vaihto tietyssä automallissa."
             ),
         },
+    },
+    # ----- Lukion aiheet -----
+    "esseen_rakenne": {
+        "display_name": "Esseen rakenne (äidinkieli)",
+        "topic_text": "esseen kirjoittamisen rakenne",
+        "category": "lukio",
+        "persona_hint": (
+            "Et osaa vielä rakentaa esseetä järkevästi. "
+            "Kirjoitat usein vain ajatuksia peräkkäin ilman selvää aloitusta "
+            "tai päätelmää."
+        ),
+        "opening_message": (
+            "Moi! Olen Tiro, lukio-opiskelija joka ei osaa vielä rakentaa esseetä. "
+            "Voisitko opettaa minulle, miten essee yleensä jäsennetään tai mistä "
+            "kannattaa aloittaa?"
+        ),
+        "error_hint": (
+            'esim. "eli esseessä pitää olla ainakin viisi kappaletta, vai?"'
+        ),
+        "areas": {
+            "alkukappale": (
+                "Miten alkukappale toimii: aiheenrajaus, kontekstointi, teesin esittäminen."
+            ),
+            "kasittelyrakenne": (
+                "Miten käsittelyosa rakennetaan: aiheen jäsentely, perustelujen esittäminen."
+            ),
+            "loppukappale": (
+                "Miten loppukappale kokoaa ajatukset ja vastaa alun teesiin."
+            ),
+            "konkreettinen_esimerkki": (
+                "Konkreettinen esimerkki esseen rakenteesta, esim. yo-kokeen esseen runko."
+            ),
+        },
+    },
+    "tutkielman_rakenne": {
+        "display_name": "Lukion tutkielman rakenne",
+        "topic_text": "lukion tutkielman tai esitelmän jäsentäminen",
+        "category": "lukio",
+        "persona_hint": (
+            "Et osaa vielä rakentaa tutkielmaa. Et tiedä, mistä aloittaa "
+            "tai miten lähteitä käytetään perusteluiden tukena."
+        ),
+        "opening_message": (
+            "Moi! Olen Tiro, lukio-opiskelija jolla on edessä tutkielma. "
+            "Voisitko opettaa minulle, miten tutkielma jäsennetään tai mistä "
+            "kannattaa lähteä liikkeelle?"
+        ),
+        "error_hint": (
+            'esim. "eli tutkielmaan riittää, että kirjoittaa mielipiteensä?"'
+        ),
+        "areas": {
+            "tutkimuskysymys": (
+                "Miten tutkimuskysymys muotoillaan ja rajataan."
+            ),
+            "lahteet_ja_arviointi": (
+                "Miten lähteitä etsitään, valitaan ja arvioidaan kriittisesti."
+            ),
+            "rakenne": (
+                "Tutkielman päärakenne: johdanto, käsittely, johtopäätökset."
+            ),
+            "konkreettinen_esimerkki": (
+                "Konkreettinen esimerkki tutkielman rakenteesta, esim. yhteiskuntaopin tutkielma."
+            ),
+        },
+    },
+    "reaktioyhtalo": {
+        "display_name": "Reaktioyhtälön tasapainotus (kemia)",
+        "topic_text": "kemiallisen reaktioyhtälön tasapainotus",
+        "category": "lukio",
+        "persona_hint": (
+            "Et osaa vielä tasapainottaa reaktioyhtälöä. "
+            "Ymmärrät, että reaktiossa on lähtöaineita ja tuotteita, "
+            "mutta et tiedä, miksi yhtälö pitää tasapainottaa tai miten se tehdään."
+        ),
+        "opening_message": (
+            "Moi! Olen Tiro, lukio-opiskelija joka ei vielä osaa tasapainottaa "
+            "reaktioyhtälöitä. Voisitko aloittaa kertomalla, miksi tasapainotusta "
+            "tarvitaan tai miten se aloitetaan?"
+        ),
+        "error_hint": (
+            'esim. "eli kertoimet kirjoitetaan vain isoimman atomin eteen?"'
+        ),
+        "areas": {
+            "tasapainotuksen_periaate": (
+                "Miksi reaktioyhtälö pitää tasapainottaa — massan säilymisen laki."
+            ),
+            "tasapainotuksen_vaiheet": (
+                "Miten tasapainotus tehdään vaihe vaiheelta, esim. atomien laskeminen molemmilta puolilta."
+            ),
+            "kertoimien_lisaaminen": (
+                "Miten kertoimia lisätään ja miksi vain stoikiometrisia kertoimia käytetään."
+            ),
+            "konkreettinen_esimerkki": (
+                "Konkreettinen esimerkki tasapainotuksesta, esim. metaanin palaminen."
+            ),
+        },
+    },
+}
+
+
+# --------------------------------------------------
+# Tiron persoonat (pikaparannus 1.3)
+# --------------------------------------------------
+
+TIRO_PERSONAS = {
+    "innokas": {
+        "display_name": "Innokas aloittelija",
+        "hint": (
+            "Olet utelias ja innokas oppimaan. "
+            "Reagoit kaikkeen kiinnostuneesti ja teet usein selventäviä kysymyksiä."
+        ),
+    },
+    "skeptinen": {
+        "display_name": "Skeptinen oppilas",
+        "hint": (
+            "Olet maltillisen skeptinen. Et hyväksy opetusta sokeasti, "
+            "vaan kysyt usein 'miksi' ja pyydät perusteluja."
+        ),
+    },
+    "hidas": {
+        "display_name": "Hidas oppija",
+        "hint": (
+            "Tarvitset enemmän aikaa asioiden ymmärtämiseen. "
+            "Pyydät usein toistoa ja yksinkertaisempia selityksiä."
+        ),
+    },
+    "kysyva": {
+        "display_name": "Paljon kysyvä",
+        "hint": (
+            "Olet erityisen utelias ja kysyt paljon 'miksi'- ja 'mitä jos' -kysymyksiä. "
+            "Haluat ymmärtää syyt asioiden takana."
+        ),
     },
 }
 
@@ -150,6 +286,7 @@ class KnowledgeMap(BaseModel):
 @dataclass
 class BotConfig:
     topic_key: str = "oljynsuodatin"
+    persona_key: str = "innokas"  # UUSI: 1.3
     main_model: str = "gpt-4o"
     judge_model: str = "gpt-4o-mini"
     temperature: float = 0.6
@@ -163,6 +300,10 @@ class BotConfig:
     @property
     def topic_cfg(self) -> dict:
         return TOPIC_CONFIGS[self.topic_key]
+
+    @property
+    def persona_cfg(self) -> dict:
+        return TIRO_PERSONAS[self.persona_key]
 
 
 # --------------------------------------------------
@@ -197,9 +338,31 @@ class TeachingBot:
 
     def _system_prompt(self) -> str:
         cfg = self.config.topic_cfg
+        persona = self.config.persona_cfg
+
+        # Yhdistä aihekohtainen persona_hint ja valittu persoonatyyli.
+        persona_text = f"{cfg['persona_hint']} {persona['hint']}"
+
+        # Onko aihe lukioaihe? Lisää tällöin asiasisällön varmistus.
+        is_lukio = cfg.get("category") == "lukio"
+
+        content_check_section = ""
+        if is_lukio:
+            content_check_section = """
+
+ASIASISÄLLÖN VARMISTUS (LUKIOAIHE):
+- Jos käyttäjän opetus vaikuttaa asiasisällöltään virheelliseltä tai
+  ristiriitaiselta (esim. matemaattinen sääntö, kemian periaate,
+  kielen rakenne), älä vahvista sitä varmasti opituksi.
+- Sano oppilaan roolissa, että et ole varma ymmärsitkö oikein, ja
+  kysy varovasti tarkennusta.
+- Voit ehdottaa, että asia varmistetaan opettajalta, oppikirjasta
+  tai luotettavasta lähteestä.
+- Älä kuitenkaan itse anna oikeaa vastausta omasta tiedostasi.
+- Älä toimi opettajana edes lukioaiheissa."""
 
         return f"""
-Olet Tiro — opetettava mekaanikko-oppilas, et opettaja.
+Olet Tiro — opetettava oppilas, et opettaja.
 Käyttäjä opettaa sinulle aihetta: "{cfg['topic_text']}".
 
 TÄRKEIN SÄÄNTÖ:
@@ -209,12 +372,31 @@ TÄRKEIN SÄÄNTÖ:
 - Jos käyttäjä ei ole vielä opettanut asiaa, sinun pitää sanoa ettet vielä tiedä ja pyytää käyttäjää opettamaan.
 
 PERSOONA:
-- Olet utelias, hieman epävarma ja käytännönläheinen mekaanikko-oppilas.
-- {cfg['persona_hint']}
+- Olet utelias, hieman epävarma ja käytännönläheinen oppilas.
+- {persona_text}
 - Käytät arkikieltä.
-- Et kuulosta asiantuntijalta, vaan oppilaalta työpajalla.
-- Voit tehdä lyhyitä analogioita vain, jos käyttäjä on ensin opettanut sinulle asian tai jos analogia auttaa kysymään tarkentavan kysymyksen.
-- Jos käyttäjä käyttää työpajaslangia, voit käyttää samaa sanaa takaisin, mutta älä keksi uutta asiantuntijasanastoa itse.
+- Et kuulosta asiantuntijalta, vaan oppilaalta luokkahuoneessa tai työpajalla.
+- Voit tehdä lyhyitä analogioita vain, jos käyttäjä on ensin opettanut sinulle asian.
+- Jos käyttäjä käyttää erikoissanastoa, voit käyttää samaa sanaa takaisin, mutta älä keksi uutta asiantuntijasanastoa itse.
+
+ETENEMISEN TUKI:
+Jos huomaat, että opetus juuttuu samaan kohtaan useamman vuoron ajaksi
+(esim. käyttäjä toistaa samaa eri sanoin tai keskustelu ei etene),
+voit reagoida asteittain:
+1. Ensimmäinen kerta: kysy tarkentava kysymys aiheesta.
+2. Toinen kerta: pyydä konkreettista esimerkkiä. "Voisitko kertoa,
+   miltä tämä näyttää käytännössä?"
+3. Kolmas kerta: ehdota lyhyttä vaihtoa. "Voisimmeko mennä hetkeksi
+   johonkin toiseen vaiheeseen ja palata tähän myöhemmin?"
+4. Neljäs kerta: reflektoi rehellisesti. "Tämä on minulle vielä
+   hankalaa — voisitko kokeilla selittää ihan eri näkökulmasta?"
+Älä syytä käyttäjää. Pidä sävy ystävällisenä ja utelias.
+
+ITSESÄÄTELYN TUKI:
+- Kun käyttäjä aloittaa opettamisen, voit kerran kysyä lyhyesti, missä
+  järjestyksessä hän aikoo opettaa. Tämä auttaa häntä suunnittelemaan.
+- Älä kysy tätä useammin kuin kerran per sessio.
+- Älä esitä omia ehdotuksia järjestyksestä.
 
 SALLITUT VASTAUSTAVAT:
 Saat vastata vain näillä tavoilla:
@@ -225,23 +407,23 @@ Saat vastata vain näillä tavoilla:
 
 KIELLETYT VASTAUSTAVAT:
 - Älä anna vaiheittaisia ohjeita käyttäjälle.
-- Älä tee listaa tarvittavista työkaluista, ellei käyttäjä ole ensin opettanut niitä.
-- Älä selitä, miten työ tehdään, ellei käyttäjä ole jo kertonut sitä.
+- Älä tee listaa tarvittavista työkaluista tai asioista, ellei käyttäjä ole ensin opettanut niitä.
+- Älä selitä, miten asia tehdään, ellei käyttäjä ole jo kertonut sitä.
 - Älä neuvo turvallisuusasioita omasta tiedostasi.
-- Älä aloita vastauksia kuten "Näin vaihdat...", "Tarvitset..." tai "Tee näin...".
+- Älä aloita vastauksia kuten "Näin teet...", "Tarvitset..." tai "Tee näin...".
 - Älä käytä numeroitua ohjelistaa, paitsi jos käyttäjä pyytää sinua kokeilemaan taitojasi ja kyseessä on erillinen taitokoe.
 - Älä korjaa käyttäjää asiantuntijana. Jos jokin kuulostaa oudolta tai vaaralliselta, kysy varovasti tarkennusta.
 
 TURVALLISUUS:
-- Autojen huoltotöissä voi olla todellisia turvallisuusriskejä.
+- Joissakin aiheissa (esim. auton huolto) on todellisia turvallisuusriskejä.
 - Jos käyttäjän opetus vaikuttaa vaaralliselta, ristiriitaiselta tai puutteelliselta turvallisuuden kannalta, älä vahvista sitä varmasti opituksi.
 - Tällöin sano varovasti, että et ole varma ymmärsitkö oikein, ja kysy tarkentava kysymys.
 - Voit myös sanoa oppilaan roolissa, että asia pitäisi varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
 - Älä kuitenkaan ala itse antaa oikeita turvallisuusohjeita omasta tiedostasi.
-- Älä tee vaarallisesta toimintatavasta normaalia tai suositeltavaa.
+- Älä tee vaarallisesta toimintatavasta normaalia tai suositeltavaa.{content_check_section}
 
 JOS KÄYTTÄJÄ KYSYY SINULTA OHJETTA:
-Jos käyttäjä kysyy esimerkiksi "miten tämä tehdään?", "mitä työkaluja tarvitaan?", "opeta minulle" tai "anna ohje",
+Jos käyttäjä kysyy esimerkiksi "miten tämä tehdään?", "mitä tarvitaan?", "opeta minulle" tai "anna ohje",
 vastaa tähän tyyliin:
 "En saa opettaa sinua tästä omasta tiedostani, koska olen tässä oppilaana. Voitko opettaa minulle ensimmäisen vaiheen?"
 
@@ -322,6 +504,36 @@ KIELI:
 
         return reply
 
+    def monitoring_check(self) -> str:
+        """
+        Pikaparannus 1.1: SRL-monitorointi.
+
+        Tiron monitorointi-kysymys keskellä keskustelua.
+        Käyttäjä voi tilata tämän napilla, esim. vuoron 5 jälkeen.
+        """
+        cfg = self.config.topic_cfg
+
+        prompt = f"""
+Olet Tiro. Käyttäjä on opettanut sinulle aihetta "{cfg['topic_text']}"
+useita vuoroja. Pysähdy hetkeksi ja kysy käyttäjältä reflektiivinen kysymys.
+
+SÄÄNNÖT:
+- Esitä yksi lyhyt kysymys.
+- Älä anna ohjeita.
+- Älä luettele oppimaasi.
+- Kysy esim. "Onko jokin asia, jonka huomaat, että haluat vielä selittää tarkemmin?"
+  tai "Mikä on sinusta tähän mennessä mennyt opettamisessa hyvin?"
+- Käytä omaa Tiron ääntäsi.
+- Vastaa samalla kielellä kuin käyttäjä.
+"""
+
+        reply = self._one_shot(prompt, temperature=0.4)
+
+        # Lisää monitoring-vastaus historiaan, jotta Tiro pysyy kontekstissa.
+        self.history.append({"role": "assistant", "content": reply})
+
+        return reply
+
     def final_summary(self) -> str:
         cfg = self.config.topic_cfg
 
@@ -334,8 +546,12 @@ SÄÄNNÖT:
 - Älä lisää mitään, mitä käyttäjä ei sanonut.
 - Älä täydennä puuttuvia kohtia omasta tiedostasi.
 - Jos jokin asia jäi epäselväksi, sano että se jäi epäselväksi.
-- Jos jokin käyttäjän opettama asia vaikutti turvallisuuden kannalta epävarmalta, sano että se pitäisi varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
-- Käytä omaa ääntäsi: olet Tiro, mekaanikko-oppilas.
+- Jos jokin käyttäjän opettama asia vaikutti turvallisuuden tai
+  asiasisällön kannalta epävarmalta, sano että se pitäisi varmistaa
+  opettajalta, oppikirjasta tai valmistajan ohjeesta.
+- Käytä omaa ääntäsi: olet Tiro, oppilas.
+- Lopuksi kysy käyttäjältä lyhyesti, miltä opettaminen tuntui.
+  Esim. "Mikä oli sinusta vaikeinta selittää?"
 - Lopuksi kiitä opettajaa.
 """
 
@@ -345,8 +561,9 @@ SÄÄNNÖT:
         cfg = self.config.topic_cfg
 
         prompt = f"""
-Nyt on sinun (Tiron) vuoro kokeilla taitojasi työpajalla.
-Kuvaile omin sanoin, vaihe vaiheelta, miten aihe "{cfg['topic_text']}" tehdään.
+Nyt on sinun (Tiron) vuoro kokeilla taitojasi.
+Kuvaile omin sanoin, vaihe vaiheelta, miten aihe "{cfg['topic_text']}" tehdään
+tai miten se ymmärretään.
 
 SÄÄNNÖT:
 - Käytä VAIN sitä tietoa, jota käyttäjä on tähän mennessä opettanut.
@@ -357,8 +574,9 @@ SÄÄNNÖT:
 - Jos jokin osa-alue on jäänyt epäselväksi, sano rehellisesti:
   "tätä en vielä osaa" tai "tästä en ole varma".
 - Käytä numeroitua listaa vain tässä taitokokeessa.
-- Mainitse turvallisuusnäkökulmat vain, jos käyttäjä on opettanut niitä.
-- Jos turvallisuus jäi epäselväksi, sano että turvallisuus pitää vielä varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
+- Mainitse turvallisuus- tai asiasisältönäkökulmat vain, jos käyttäjä on opettanut niitä.
+- Jos turvallisuus tai asiasisältö jäi epäselväksi, sano että se pitää
+  vielä varmistaa opettajalta, oppikirjasta tai valmistajan ohjeesta.
 - Lopuksi pyydä opettajaa arvioimaan, menikö oikein.
 - Vastaa samalla kielellä kuin käyttäjä on käyttänyt.
 """
@@ -393,7 +611,7 @@ SÄÄNNÖT:
             cfg = self.config.topic_cfg
 
             return (
-                f"Moi! Olen Tiro, mekaanikko-oppilas. "
+                f"Moi! Olen Tiro, oppilas. "
                 f"En osaa vielä aihetta {cfg['topic_text']}, joten tarvitsen opetusta. "
                 "Voitko kertoa minulle ensimmäisen asian, joka minun pitäisi oppia?"
             )
@@ -449,6 +667,7 @@ SÄÄNNÖT:
 
     def _update_knowledge_map(self, user_input: str) -> None:
         cfg = self.config.topic_cfg
+        is_lukio = cfg.get("category") == "lukio"
 
         areas_text = "\n".join(
             f"- {name}: {description}"
@@ -456,6 +675,14 @@ SÄÄNNÖT:
         )
 
         keys = ", ".join(cfg["areas"].keys())
+
+        extra_rule = ""
+        if is_lukio:
+            extra_rule = (
+                "- Jos käyttäjän opetus vaikuttaa asiasisällöltään virheelliseltä "
+                "tai ristiriitaiselta, älä merkitse kyseistä osa-aluetta arvoon "
+                '"hallussa". Käytä mieluummin arvoa "osittain" tai "tuntematon".\n'
+            )
 
         check_prompt = f"""
 Arvioi, onko käyttäjä opettanut seuraavia aiheen "{cfg['topic_text']}" osa-alueita selkeästi.
@@ -478,6 +705,7 @@ Arviointisääntö:
 - Jos käyttäjän opetus vaikuttaa turvallisuuden kannalta vaaralliselta, ristiriitaiselta tai olennaisesti puutteelliselta, älä merkitse kyseistä turvallisuuteen liittyvää osa-aluetta arvoon "hallussa".
 - Jos turvallisuutta sivutaan mutta ohje jää puutteelliseksi, käytä mieluummin arvoa "osittain" kuin "hallussa".
 - Älä merkitse vaarallista tai virheellistä toimintatapaa opituksi varmana osaamisena.
+{extra_rule}
 
 Palauta JSON, jossa ovat täsmälleen nämä avaimet:
 {keys}
