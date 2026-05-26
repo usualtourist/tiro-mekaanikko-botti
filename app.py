@@ -28,10 +28,6 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* --------------------------------------------------
-       Värit
-    -------------------------------------------------- */
-
     :root {
         --workshop-bg: #f3f0e8;
         --workshop-panel: #ffffff;
@@ -45,10 +41,6 @@ st.markdown(
         --workshop-steel: #6b7280;
         --workshop-dark: #263238;
     }
-
-    /* --------------------------------------------------
-       Yleinen sivupohja
-    -------------------------------------------------- */
 
     .stApp {
         background:
@@ -109,10 +101,6 @@ st.markdown(
         border-radius: 5px;
     }
 
-    /* --------------------------------------------------
-       Sivupalkki
-    -------------------------------------------------- */
-
     [data-testid="stSidebar"] {
         background:
             linear-gradient(
@@ -133,10 +121,6 @@ st.markdown(
         color: var(--workshop-dark) !important;
     }
 
-    /* --------------------------------------------------
-       Yläbanneri
-    -------------------------------------------------- */
-
     .tiro-workshop-banner {
         background: linear-gradient(90deg, #fff8ed, #ffffff);
         border: 1px solid var(--workshop-border);
@@ -153,10 +137,6 @@ st.markdown(
         color: var(--workshop-dark);
     }
 
-    /* --------------------------------------------------
-       Chat-viestit
-    -------------------------------------------------- */
-
     [data-testid="stChatMessage"] {
         background-color: var(--workshop-panel);
         border: 1px solid var(--workshop-border);
@@ -170,10 +150,6 @@ st.markdown(
         color: var(--workshop-text) !important;
         line-height: 1.55;
     }
-
-    /* --------------------------------------------------
-       Napit
-    -------------------------------------------------- */
 
     .stButton button,
     .stDownloadButton button {
@@ -207,10 +183,6 @@ st.markdown(
         box-shadow: none;
     }
 
-    /* --------------------------------------------------
-       Syötteet
-    -------------------------------------------------- */
-
     input,
     textarea,
     [data-baseweb="select"] {
@@ -228,10 +200,6 @@ st.markdown(
     [data-testid="stChatInput"] textarea {
         color: var(--workshop-text) !important;
     }
-
-    /* --------------------------------------------------
-       Expanderit, alertit ja erotinviivat
-    -------------------------------------------------- */
 
     [data-testid="stExpander"] {
         background-color: rgba(255, 255, 255, 0.75);
@@ -255,10 +223,6 @@ st.markdown(
         margin-top: 1.5rem;
         margin-bottom: 1.5rem;
     }
-
-    /* --------------------------------------------------
-       Oikea työpajapaneeli
-    -------------------------------------------------- */
 
     .right-workshop-panel {
         background: rgba(255, 248, 237, 0.96);
@@ -287,10 +251,6 @@ st.markdown(
         line-height: 1.45;
         color: var(--workshop-text);
     }
-
-    /* --------------------------------------------------
-       Opeteltavat asiat -kortit
-    -------------------------------------------------- */
 
     .learning-card {
         background-color: #fffdf7;
@@ -337,10 +297,6 @@ st.markdown(
 # --------------------------------------------------
 
 def get_api_key() -> str | None:
-    """
-    Hakee API-avaimen ensisijaisesti Streamlit secretsistä.
-    Jos secrets.toml puuttuu, käytetään .env-tiedostoa / ympäristömuuttujaa.
-    """
     try:
         api_key = st.secrets["OPENAI_API_KEY"]
         if api_key:
@@ -379,9 +335,6 @@ def init_bot(topic_key: str) -> TeachingBot:
 
 
 def reset_session(topic_key: str) -> None:
-    """
-    Aloittaa uuden opetussession valitulla aiheella.
-    """
     st.session_state.bot = init_bot(topic_key)
     st.session_state.messages = []
     st.session_state.summary = None
@@ -411,17 +364,66 @@ for key, default in [
     ("main_model", "gpt-4o"),
     ("temperature", 0.6),
     ("max_turns", 30),
+    ("consent_given", False),
 ]:
     if key not in st.session_state:
         st.session_state[key] = default
 
 
 # --------------------------------------------------
-# Sivupalkki vasemmalla: käyttöohjeet ja asetukset
+# Sivupalkki vasemmalla
 # --------------------------------------------------
 
 with st.sidebar:
     st.markdown("## 🔧 Työpaja")
+
+    st.warning(
+        "🔒 **Tietoturva:** Viestit lähetetään OpenAI:lle käsiteltäväksi. "
+        "Älä syötä henkilötietoja tai arkaluonteisia tietoja."
+    )
+
+    with st.expander("🔒 Lue lisää tietoturvasta", expanded=False):
+        st.markdown(
+            """
+**Mihin viestit menevät?**
+
+Tiro käyttää OpenAI:n kielimallia. Kaikki kirjoittamasi viestit
+lähetetään OpenAI:n palveluun käsiteltäväksi vastausta varten.
+Viestit voivat kulkea OpenAI:n palvelimien kautta esimerkiksi
+Yhdysvalloissa.
+
+**OpenAI:n tietoturva- ja yksityisyysperiaatteet:**  
+[https://openai.com/fi-FI/security-and-privacy/](https://openai.com/fi-FI/security-and-privacy/)
+
+**Mitä EI saa syöttää:**
+
+- Henkilötietoja, kuten nimi, henkilötunnus, osoite, puhelinnumero,
+  sähköposti tai syntymäaika.
+- Tunnistettavia tietoja muista henkilöistä.
+- Terveystietoja tai muita arkaluonteisia tietoja.
+- Salasanoja, API-avaimia tai muita salaisuuksia.
+- Salassa pidettävää työ- tai opiskelumateriaalia.
+
+**Mitä voi syöttää:**
+
+- Yleisiä opetustekstejä ja kuvauksia työvaiheista.
+- Yleisluontoisia esimerkkejä ilman henkilöitä.
+- Teknisiä termejä ja yleistä keskustelua aiheesta.
+
+**Vinkki:**
+
+Jos haluat käyttää esimerkkitilannetta, käytä keksittyjä henkilöitä
+ja yleisiä paikkoja, esimerkiksi "asiakas tuo auton" tai
+"oppilas korjaajakoulussa".
+
+**Vastuu:**
+
+Vastaat itse siitä, mitä syötät palveluun. Älä jaa tietoja, joita
+et haluaisi ulkopuolisen näkevän.
+            """
+        )
+
+    st.divider()
 
     with st.expander("📖 Käyttöohjeet", expanded=False):
         st.markdown(
@@ -433,13 +435,14 @@ Sinun tehtäväsi on opettaa hänelle valittu huoltotehtävä.
 
 **Näin käytät bottia:**
 
-1. Valitse opeteltava aihe.
-2. Lue Tiron aloitusviesti.
-3. Kirjoita opetuksesi keskustelukenttään.
-4. Vastaa Tiron jatkokysymyksiin.
-5. Korjaa Tiroa, jos hän tekee virhepäätelmän.
-6. Tarkista opeteltavat asiat oikeasta paneelista.
-7. Kun haluat, pyydä Tiroa kokeilemaan taitojaan.
+1. Hyväksy tietoturvahuomio aloitusnäkymässä.
+2. Valitse opeteltava aihe.
+3. Lue Tiron aloitusviesti.
+4. Kirjoita opetuksesi keskustelukenttään.
+5. Vastaa Tiron jatkokysymyksiin.
+6. Korjaa Tiroa, jos hän tekee virhepäätelmän.
+7. Tarkista opeteltavat asiat oikeasta paneelista.
+8. Pyydä Tiroa kokeilemaan taitojaan, kun olet valmis.
 
 **Tavoite:**
 
@@ -496,10 +499,6 @@ Yksi vuoro = käyttäjän viesti + Tiron vastaus.
         "🧠 Päämalli",
         ["gpt-4o", "gpt-4o-mini"],
         index=["gpt-4o", "gpt-4o-mini"].index(st.session_state["main_model"]),
-        help=(
-            "Kielimalli, jota Tiro käyttää. "
-            "gpt-4o on laadukkaampi, gpt-4o-mini nopeampi ja edullisempi."
-        ),
     )
 
     st.session_state["temperature"] = st.slider(
@@ -508,10 +507,6 @@ Yksi vuoro = käyttäjän viesti + Tiron vastaus.
         max_value=1.2,
         value=float(st.session_state["temperature"]),
         step=0.1,
-        help=(
-            "Säätää Tiron luovuutta. "
-            "Matala arvo tekee vastauksista vakaampia, korkea vaihtelevampia."
-        ),
     )
 
     st.session_state["max_turns"] = st.number_input(
@@ -520,10 +515,6 @@ Yksi vuoro = käyttäjän viesti + Tiron vastaus.
         max_value=100,
         value=int(st.session_state["max_turns"]),
         step=5,
-        help=(
-            "Kuinka monta käyttäjän viestiä sessiossa sallitaan. "
-            "Tämä auttaa rajaamaan kustannuksia."
-        ),
     )
 
     st.caption(
@@ -533,8 +524,11 @@ Yksi vuoro = käyttäjän viesti + Tiron vastaus.
     st.divider()
 
     if st.button("🔄 Aloita uusi keskustelu", use_container_width=True):
-        reset_session(st.session_state.current_topic)
-        st.rerun()
+        if st.session_state.get("consent_given"):
+            reset_session(st.session_state.current_topic)
+            st.rerun()
+        else:
+            st.error("Hyväksy ensin tietoturvahuomio.")
 
     st.divider()
 
@@ -542,7 +536,51 @@ Yksi vuoro = käyttäjän viesti + Tiron vastaus.
 
 
 # --------------------------------------------------
-# Alusta botti, jos sitä ei vielä ole
+# Tietoturvasuostumus (näytetään ennen botin käyttöä)
+# --------------------------------------------------
+
+st.markdown("# 🔩 TIRO")
+
+if not st.session_state.consent_given:
+    st.markdown("### 🔒 Tietoturvahuomio")
+
+    st.markdown(
+        """
+Tiro käyttää OpenAI:n kielimallia. Kaikki viestit, jotka kirjoitat,
+**lähetetään OpenAI:n palveluun käsiteltäväksi**.
+
+**Älä syötä:**
+- henkilötietoja (oma tai muiden)
+- terveystietoja tai muita arkaluonteisia tietoja
+- salasanoja tai API-avaimia
+- salassa pidettävää työ- tai opiskelumateriaalia
+
+OpenAI:n tietoturva- ja yksityisyysperiaatteet löydät täältä:  
+[https://openai.com/fi-FI/security-and-privacy/](https://openai.com/fi-FI/security-and-privacy/)
+
+Vastuu siitä, mitä palveluun syötät, on käyttäjällä.
+        """
+    )
+
+    consent = st.checkbox(
+        "✅ Ymmärrän tietoturvaehdot ja sitoudun olemaan syöttämättä "
+        "henkilötietoja tai arkaluonteisia tietoja.",
+        value=False,
+        key="consent_checkbox",
+    )
+
+    if st.button("🔓 Aloita käyttö", use_container_width=False):
+        if consent:
+            st.session_state.consent_given = True
+            st.rerun()
+        else:
+            st.error("Sinun täytyy hyväksyä tietoturvaehdot jatkaaksesi.")
+
+    st.stop()
+
+
+# --------------------------------------------------
+# Botin alustus
 # --------------------------------------------------
 
 if st.session_state.bot is None:
@@ -556,10 +594,9 @@ ratio = km.completion_ratio()
 
 
 # --------------------------------------------------
-# Otsikko ja kuvaus
+# Otsikko ja banneri
 # --------------------------------------------------
 
-st.markdown("# 🔩 TIRO")
 st.markdown(f"### `> Tehtävä: {topic_cfg['display_name']}`")
 
 st.markdown(
@@ -575,7 +612,7 @@ Opeta, vastaile kysymyksiin ja korjaa Tiron virhepäätelmät.
 
 
 # --------------------------------------------------
-# Apufunktio: vienti Markdowniksi
+# Vienti Markdowniksi
 # --------------------------------------------------
 
 def build_export_md() -> str:
@@ -642,7 +679,7 @@ def build_export_md() -> str:
 
 
 # --------------------------------------------------
-# Pääasettelu: keskustelu vasemmalle, paneeli oikealle
+# Pääasettelu
 # --------------------------------------------------
 
 left_col, right_col = st.columns([2.2, 1], gap="large")
@@ -654,6 +691,11 @@ left_col, right_col = st.columns([2.2, 1], gap="large")
 
 with left_col:
     st.markdown("### 💬 Keskustelu työpajalla")
+
+    st.caption(
+        "🔒 Älä syötä henkilötietoja tai arkaluonteisia tietoja. "
+        "Viestit lähetetään OpenAI:lle."
+    )
 
     for msg in st.session_state.messages:
         avatar = "🔧" if msg["role"] == "assistant" else "👷"
@@ -701,10 +743,6 @@ with left_col:
 # --------------------------------------------------
 
 with right_col:
-    # --------------------------------------------------
-    # 1. Opeteltavat asiat
-    # --------------------------------------------------
-
     st.markdown(
         """
         <div class="right-workshop-panel">
@@ -758,10 +796,6 @@ with right_col:
     st.caption(f"⏱️ Vuoro {bot.turn_count} / {bot.config.max_turns}")
 
     st.divider()
-
-    # --------------------------------------------------
-    # 2. Toiminnot
-    # --------------------------------------------------
 
     st.markdown(
         """
