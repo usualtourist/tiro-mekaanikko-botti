@@ -46,163 +46,164 @@ TOPIC_CONFIGS = {
             ),
         },
     },
-    "renkaat": {
-        "display_name": "Renkaiden vaihto",
-        "topic_text": "renkaiden vaihto",
+    "potilassiirto": {
+        "display_name": "Turvallinen siirto vuoteesta pyörätuoliin",
+        "topic_text": "asiakkaan turvallinen siirto vuoteesta pyörätuoliin",
         "category": "ammattikoulu",
         "persona_hint": (
-            "Et tiedä renkaiden vaihdosta juuri mitään. "
-            "Et ole itse vaihtanut auton renkaita. "
-            "Olet varovainen auton nostamisen, tunkin käytön ja painavien renkaiden kanssa."
+            "Et tiedä asiakkaan siirtämisestä juuri mitään. "
+            "Et ole itse tehnyt potilassiirtoa. "
+            "Olet varovainen, koska pelkäät satuttavasi joko asiakasta tai itseäsi väärällä tekniikalla."
         ),
         "opening_message": (
-            "Moi! Olen Tiro, aloitteleva mekaanikko-oppilas. "
-            "En osaa vielä vaihtaa renkaita itse. "
-            "Voisitko opettaa minulle aluksi, mitä työkaluja tarvitaan tai miten työ aloitetaan?"
+            "Moi! Olen Tiro, aloitteleva lähihoitaja-opiskelija. "
+            "En osaa vielä siirtää asiakasta turvallisesti vuoteesta pyörätuoliin. "
+            "Voisitko aloittaa kertomalla, mitä asioita pitää ottaa huomioon ennen siirron aloittamista?"
         ),
         "error_hint": (
-            'esim. "eli pultit kiristetään yksi kerrallaan ympäri kehää järjestyksessä?"'
+            'esim. "eli asiakas voidaan vain nostaa kainaloista kiinni pitäen?"'
         ),
         "areas": {
-            "tarvittavat_tyokalut": (
-                "Mitä työkaluja tarvitaan, kuten tunkki, pyöräavain, momenttiavain ja mahdolliset pukit."
+            "asiakkaan_arviointi": (
+                "Asiakkaan toimintakyvyn arviointi ennen siirtoa: kuntoutuminen, kivut, oma osallistuminen."
             ),
-            "vaihdon_vaiheet": (
-                "Vaiheet, kuten pulttien löysäys, auton nosto, renkaan irrotus, uuden renkaan asennus ja kiristys."
+            "siirron_vaiheet": (
+                "Siirron vaiheet: valmistelu, ohjaaminen, varsinainen siirto, asennon tarkistus."
             ),
-            "turvallisuus": (
-                "Turvallisuusasiat, kuten tasainen alusta, käsijarru, oikea nostokohta ja kiristysmomentti."
+            "ergonomia_ja_turvallisuus": (
+                "Auttajan ergonomia, työasento, apuvälineiden käyttö ja asiakkaan turvallisuus."
             ),
-            "konkreettinen_esimerkki": (
-                "Konkreettinen esimerkki renkaanvaihdosta, esimerkiksi henkilöauton renkaiden vaihto syksyllä."
+            "viestinta_asiakkaalle": (
+                "Miten asiakasta ohjataan ja informoidaan siirron eri vaiheissa."
             ),
         },
     },
-    "lamppu": {
-        "display_name": "Lampun vaihto (auton ajovalo)",
-        "topic_text": "auton ajovalon lampun vaihto",
+    "hygienia_ruoka": {
+        "display_name": "Hygieniavaatimukset ruokatyössä",
+        "topic_text": "ruokatyön hygieniavaatimukset",
         "category": "ammattikoulu",
         "persona_hint": (
-            "Et tiedä auton ajovalon lampun vaihdosta juuri mitään. "
-            "Et ole itse vaihtanut ajovalon lamppua. "
-            "Olet varovainen sähkön, kuuman lampun ja uuden lampun lasipinnan koskettamisen kanssa."
+            "Et tiedä ruokatyön hygieniavaatimuksista juuri mitään. "
+            "Et ole työskennellyt aiemmin ruoka-alalla. "
+            "Olet varovainen, koska tiedät että huono hygienia voi aiheuttaa ruokamyrkytyksiä."
         ),
         "opening_message": (
-            "Moi! Olen Tiro, aloitteleva mekaanikko-oppilas. "
-            "En osaa vielä vaihtaa auton ajovalon lamppua. "
-            "Voisitko opettaa minulle ensimmäisen asian, joka minun pitäisi ymmärtää?"
+            "Moi! Olen Tiro, aloitteleva ruoka-alan opiskelija. "
+            "En tiedä vielä, mitä hygieniavaatimukset ruokatyössä tarkoittavat käytännössä. "
+            "Voisitko aloittaa kertomalla, mikä on tärkein hygieniaperiaate ruoanvalmistuksessa?"
         ),
         "error_hint": (
-            'esim. "eli uuteen lamppuun saa koskea ihan vapaasti, kunhan se vain sopii kantaan?"'
+            'esim. "eli käsien pesu riittää, kunhan käytetään mahdollisimman kuumaa vettä?"'
         ),
         "areas": {
-            "tarvittavat_tyokalut": (
-                "Mitä tarvitaan, kuten oikea lamppumalli, käsineet tai liina ja mahdollinen ruuvimeisseli."
+            "henkilokohtainen_hygienia": (
+                "Käsihygienia, työasu, hiusten suojaus ja sairaana työskentelyn säännöt."
             ),
-            "vaihdon_vaiheet": (
-                "Vaiheet, kuten konepellin avaus, suojuksen irrotus, vanhan lampun irrotus ja uuden asennus."
+            "raaka_aineiden_kasittely": (
+                "Raaka-aineiden vastaanotto, säilytys ja eri ruokien erottaminen ristikontaminaation välttämiseksi."
             ),
-            "turvallisuus": (
-                "Turvallisuusasiat, kuten virtojen sammuttaminen, lampun jäähtyminen ja lasipintaan koskemisen välttäminen."
+            "lampotilojen_valvonta": (
+                "Kylmäketjun ylläpito, kuumennuslämpötilat ja jäähdytys."
             ),
-            "konkreettinen_esimerkki": (
-                "Konkreettinen esimerkki lampun vaihdosta, esimerkiksi H7-lampun vaihto tietyssä automallissa."
+            "tyopisteen_puhtaus": (
+                "Työvälineiden, työtasojen ja pintojen puhtaanapito sekä pesuaineet."
             ),
         },
     },
     # ----- Lukion aiheet -----
-    "esseen_rakenne": {
-        "display_name": "Esseen rakenne (äidinkieli)",
-        "topic_text": "esseen kirjoittamisen rakenne",
+    "yhtalonratkaisu": {
+        "display_name": "Yhtälönratkaisun strategiat (matematiikka)",
+        "topic_text": "yhtälönratkaisun perusperiaatteet ja strategiat",
         "category": "lukio",
         "persona_hint": (
-            "Et osaa vielä rakentaa esseetä järkevästi. "
-            "Kirjoitat usein vain ajatuksia peräkkäin ilman selvää aloitusta "
-            "tai päätelmää."
+            "Et osaa vielä ratkaista yhtälöitä järjestelmällisesti. "
+            "Ymmärrät, että yhtälössä on yhtäsuuruusmerkki, mutta et tiedä, "
+            "miten muuttujan arvo saadaan selville vaihe vaiheelta."
         ),
         "opening_message": (
-            "Moi! Olen Tiro, lukio-opiskelija joka ei osaa vielä rakentaa esseetä. "
-            "Voisitko opettaa minulle, miten essee yleensä jäsennetään tai mistä "
-            "kannattaa aloittaa?"
+            "Moi! Olen Tiro, lukio-opiskelija joka ei vielä osaa ratkaista yhtälöitä. "
+            "Voisitko aloittaa kertomalla, mitä yhtälö oikeastaan tarkoittaa "
+            "tai mikä on ensimmäinen asia, jonka pitäisi ymmärtää?"
         ),
         "error_hint": (
-            'esim. "eli esseessä pitää olla ainakin viisi kappaletta, vai?"'
+            'esim. "eli yhtälön ratkaisemisessa voi siirtää lukuja puolelta toiselle ilman merkin vaihtoa?"'
         ),
         "areas": {
-            "alkukappale": (
-                "Miten alkukappale toimii: aiheenrajaus, kontekstointi, teesin esittäminen."
+            "yhtalon_periaate": (
+                "Yhtälön perusperiaate: vasen ja oikea puoli ovat yhtä suuria."
             ),
-            "kasittelyrakenne": (
-                "Miten käsittelyosa rakennetaan: aiheen jäsentely, perustelujen esittäminen."
+            "operaatiot_molemmin_puolin": (
+                "Sama operaatio tehdään yhtälön molemmilla puolilla — miksi ja miten."
             ),
-            "loppukappale": (
-                "Miten loppukappale kokoaa ajatukset ja vastaa alun teesiin."
+            "termien_siirto": (
+                "Termien siirto puolelta toiselle ja merkin vaihtuminen siirron yhteydessä."
             ),
-            "konkreettinen_esimerkki": (
-                "Konkreettinen esimerkki esseen rakenteesta, esim. yo-kokeen esseen runko."
+            "ratkaisun_tarkistaminen": (
+                "Miten ratkaisu tarkistetaan sijoittamalla se alkuperäiseen yhtälöön."
             ),
         },
     },
-    "tutkielman_rakenne": {
-        "display_name": "Lukion tutkielman rakenne",
-        "topic_text": "lukion tutkielman tai esitelmän jäsentäminen",
+    "mitoosi": {
+        "display_name": "Solun jakautumisen vaiheet — mitoosi (biologia)",
+        "topic_text": "solun jakautumisen vaiheet eli mitoosi",
         "category": "lukio",
         "persona_hint": (
-            "Et osaa vielä rakentaa tutkielmaa. Et tiedä, mistä aloittaa "
-            "tai miten lähteitä käytetään perusteluiden tukena."
+            "Et osaa vielä selittää, miten solu jakautuu. "
+            "Tiedät, että soluja syntyy lisää, mutta et tiedä, mitä solun sisällä "
+            "tapahtuu jakautumisen aikana tai mistä vaiheista mitoosi koostuu."
         ),
         "opening_message": (
-            "Moi! Olen Tiro, lukio-opiskelija jolla on edessä tutkielma. "
-            "Voisitko opettaa minulle, miten tutkielma jäsennetään tai mistä "
-            "kannattaa lähteä liikkeelle?"
+            "Moi! Olen Tiro, lukio-opiskelija joka ei vielä osaa selittää mitoosia. "
+            "Voisitko aloittaa kertomalla, miksi solut jakautuvat ja mistä vaiheista "
+            "mitoosi koostuu?"
         ),
         "error_hint": (
-            'esim. "eli tutkielmaan riittää, että kirjoittaa mielipiteensä?"'
+            'esim. "eli mitoosissa solusta tulee aina kaksi erilaista solua?"'
         ),
         "areas": {
-            "tutkimuskysymys": (
-                "Miten tutkimuskysymys muotoillaan ja rajataan."
+            "mitoosin_merkitys": (
+                "Miksi mitoosi tapahtuu ja missä tilanteissa se on välttämätöntä."
             ),
-            "lahteet_ja_arviointi": (
-                "Miten lähteitä etsitään, valitaan ja arvioidaan kriittisesti."
+            "profaasi_metafaasi": (
+                "Profaasin ja metafaasin pääpiirteet: kromosomit tiivistyvät, asettuvat keskelle."
             ),
-            "rakenne": (
-                "Tutkielman päärakenne: johdanto, käsittely, johtopäätökset."
+            "anafaasi_telofaasi": (
+                "Anafaasin ja telofaasin pääpiirteet: kromosomit erkanevat, syntyy kaksi tytärsolua."
             ),
-            "konkreettinen_esimerkki": (
-                "Konkreettinen esimerkki tutkielman rakenteesta, esim. yhteiskuntaopin tutkielma."
+            "lopputulos": (
+                "Mitä mitoosista syntyy: kaksi geneettisesti samanlaista tytärsolua."
             ),
         },
     },
-    "reaktioyhtalo": {
-        "display_name": "Reaktioyhtälön tasapainotus (kemia)",
-        "topic_text": "kemiallisen reaktioyhtälön tasapainotus",
+    "energian_sailyminen": {
+        "display_name": "Energian säilymislaki (fysiikka)",
+        "topic_text": "energian säilymislaki ja energian muodonmuutokset",
         "category": "lukio",
         "persona_hint": (
-            "Et osaa vielä tasapainottaa reaktioyhtälöä. "
-            "Ymmärrät, että reaktiossa on lähtöaineita ja tuotteita, "
-            "mutta et tiedä, miksi yhtälö pitää tasapainottaa tai miten se tehdään."
+            "Et osaa vielä selittää, mitä energian säilyminen tarkoittaa. "
+            "Olet kuullut, että energiaa ei voi syntyä eikä tuhota, mutta et "
+            "ymmärrä, mitä energian eri muodot ovat tai miten ne muuttuvat toisikseen."
         ),
         "opening_message": (
-            "Moi! Olen Tiro, lukio-opiskelija joka ei vielä osaa tasapainottaa "
-            "reaktioyhtälöitä. Voisitko aloittaa kertomalla, miksi tasapainotusta "
-            "tarvitaan tai miten se aloitetaan?"
+            "Moi! Olen Tiro, lukio-opiskelija joka ei vielä ymmärrä energian säilymistä. "
+            "Voisitko aloittaa kertomalla, mitä energia oikeastaan on "
+            "tai mikä on energian säilymislain pääajatus?"
         ),
         "error_hint": (
-            'esim. "eli kertoimet kirjoitetaan vain isoimman atomin eteen?"'
+            'esim. "eli kun pallo putoaa ja pysähtyy maahan, sen energia katoaa kokonaan?"'
         ),
         "areas": {
-            "tasapainotuksen_periaate": (
-                "Miksi reaktioyhtälö pitää tasapainottaa — massan säilymisen laki."
+            "energian_kasite": (
+                "Mitä energialla yleisesti tarkoitetaan ja miksi se on tärkeä käsite fysiikassa."
             ),
-            "tasapainotuksen_vaiheet": (
-                "Miten tasapainotus tehdään vaihe vaiheelta, esim. atomien laskeminen molemmilta puolilta."
+            "energian_muodot": (
+                "Energian eri muodot: liike-energia, potentiaalienergia, lämpöenergia jne."
             ),
-            "kertoimien_lisaaminen": (
-                "Miten kertoimia lisätään ja miksi vain stoikiometrisia kertoimia käytetään."
+            "sailymislaki": (
+                "Säilymislain ydinajatus: energiaa ei voi syntyä eikä tuhota, vain muuttaa muotoa."
             ),
             "konkreettinen_esimerkki": (
-                "Konkreettinen esimerkki tasapainotuksesta, esim. metaanin palaminen."
+                "Konkreettinen esimerkki energian muodonmuutoksesta, esim. keinu tai putoava esine."
             ),
         },
     },
@@ -250,6 +251,16 @@ TIRO_PERSONAS = {
 # --------------------------------------------------
 
 class KnowledgeMap(BaseModel):
+    """
+    Dynaaminen knowledge map.
+
+    Tämä hyväksyy aihekohtaiset avaimet, esimerkiksi:
+    - tarvittavat_tyokalut
+    - vaihdon_vaiheet
+    - turvallisuus
+    - konkreettinen_esimerkki
+    """
+
     model_config = {"extra": "allow"}
 
     @classmethod
@@ -258,8 +269,10 @@ class KnowledgeMap(BaseModel):
 
     def completion_ratio(self) -> float:
         values = list(self.model_dump().values())
+
         if not values:
             return 0.0
+
         mastered = sum(1 for value in values if value == "hallussa")
         return mastered / len(values)
 
@@ -279,6 +292,8 @@ class BotConfig:
     judge_model: str = "gpt-4o-mini"
     temperature: float = 0.6
     max_turns: int = 30
+
+    # API-kustannusten ja vastauspituuksien hallinta.
     max_output_tokens: int = 500
     judge_max_tokens: int = 250
     one_shot_max_tokens: int = 700
@@ -310,7 +325,16 @@ class TeachingBot:
             {"role": "system", "content": self._system_prompt()}
         ]
 
+        # Jatkokehitysidea:
+        # learned_facts-muisti voisi tallentaa eksplisiittisesti ne asiat,
+        # jotka käyttäjä on opettanut Tirolle. Taitokoe ja yhteenveto
+        # voitaisiin myöhemmin rakentaa ensisijaisesti learned_facts-listasta
+        # keskusteluhistorian sijaan.
         self.learned_facts: list[str] = []
+
+    # --------------------------------------------------
+    # System prompt
+    # --------------------------------------------------
 
     def _system_prompt(self) -> str:
         cfg = self.config.topic_cfg
@@ -389,7 +413,7 @@ KIELLETYT VASTAUSTAVAT:
 - Älä korjaa käyttäjää asiantuntijana. Jos jokin kuulostaa oudolta tai vaaralliselta, kysy varovasti tarkennusta.
 
 TURVALLISUUS:
-- Joissakin aiheissa (esim. auton huolto) on todellisia turvallisuusriskejä.
+- Joissakin aiheissa (esim. auton huolto, potilassiirto, ruokahygienia) on todellisia turvallisuusriskejä.
 - Jos käyttäjän opetus vaikuttaa vaaralliselta, ristiriitaiselta tai puutteelliselta turvallisuuden kannalta, älä vahvista sitä varmasti opituksi.
 - Tällöin sano varovasti, että et ole varma ymmärsitkö oikein, ja kysy tarkentava kysymys.
 - Voit myös sanoa oppilaan roolissa, että asia pitäisi varmistaa opettajalta, huolto-ohjeesta tai valmistajan ohjeesta.
@@ -419,21 +443,35 @@ KIELI:
 - Vastaa samalla kielellä kuin käyttäjä.
 """.strip()
 
+    # --------------------------------------------------
+    # Julkiset apumetodit
+    # --------------------------------------------------
+
     def opening_message(self) -> str:
         return self.config.topic_cfg["opening_message"]
 
     def ask(self, user_input: str) -> str:
+        """
+        Käsittelee käyttäjän viestin.
+
+        Tärkeää:
+        - Tiro ei saa ryhtyä opettajaksi.
+        - Selkeät ohjepyynnöt ja pelkät tervehdykset käsitellään suoraan.
+        """
+
         if self.turn_count >= self.config.max_turns:
             return "[Demo on saavuttanut maksimivuoromäärän. Aloita uusi sessio.]"
 
         self.history.append({"role": "user", "content": user_input})
         self.turn_count += 1
 
+        # Suora suoja: tervehdys ei saa johtaa opetukseen.
         greeting_reply = self._handle_simple_greeting(user_input)
         if greeting_reply:
             self.history.append({"role": "assistant", "content": greeting_reply})
             return greeting_reply
 
+        # Suora suoja: jos käyttäjä pyytää ohjeita, Tiro ei saa opettaa.
         instruction_reply = self._handle_instruction_request(user_input)
         if instruction_reply:
             self.history.append({"role": "assistant", "content": instruction_reply})
@@ -446,7 +484,9 @@ KIELI:
                 temperature=self.config.temperature,
                 max_tokens=self.config.max_output_tokens,
             )
+
             reply = response.choices[0].message.content
+
         except OpenAIError:
             logger.exception("OpenAI-virhe Tiron vastauksessa")
             return (
@@ -455,10 +495,19 @@ KIELI:
             )
 
         self.history.append({"role": "assistant", "content": reply})
+
+        # Päivitetään oppimiskartta vain käyttäjän uusimman opetuksen perusteella.
         self._update_knowledge_map(user_input)
+
         return reply
 
     def monitoring_check(self) -> str:
+        """
+        SRL-monitorointi.
+
+        Tiron monitorointi-kysymys keskellä keskustelua.
+        Käyttäjä voi tilata tämän napilla.
+        """
         cfg = self.config.topic_cfg
 
         prompt = f"""
@@ -476,7 +525,10 @@ SÄÄNNÖT:
 """
 
         reply = self._one_shot(prompt, temperature=0.4)
+
+        # Lisää monitoring-vastaus historiaan, jotta Tiro pysyy kontekstissa.
         self.history.append({"role": "assistant", "content": reply})
+
         return reply
 
     def final_summary(self) -> str:
@@ -499,6 +551,7 @@ SÄÄNNÖT:
   Esim. "Mikä oli sinusta vaikeinta selittää?"
 - Lopuksi kiitä opettajaa.
 """
+
         return self._one_shot(prompt, temperature=0.4)
 
     def skill_test(self) -> str:
@@ -524,19 +577,36 @@ SÄÄNNÖT:
 - Lopuksi pyydä opettajaa arvioimaan, menikö oikein.
 - Vastaa samalla kielellä kuin käyttäjä on käyttänyt.
 """
+
         return self._one_shot(prompt, temperature=0.3)
 
+    # --------------------------------------------------
+    # Suojat: tervehdys ja ohjepyyntö
+    # --------------------------------------------------
+
     def _handle_simple_greeting(self, user_input: str) -> str | None:
+        """
+        Estää tilanteen, jossa Tiro alkaa opettaa käyttäjää pelkän tervehdyksen jälkeen.
+        """
+
         text = user_input.strip().lower()
         words = text.replace("!", " ").replace("?", " ").replace(",", " ").split()
 
         greeting_words = {
-            "hei", "moi", "moikka", "terve", "heippa",
-            "hello", "hi", "hey",
+            "hei",
+            "moi",
+            "moikka",
+            "terve",
+            "heippa",
+            "hello",
+            "hi",
+            "hey",
         }
 
+        # Jos viesti on lyhyt ja sisältää tervehdyksen, käsitellään se tervehdyksenä.
         if len(words) <= 6 and any(word in greeting_words for word in words):
             cfg = self.config.topic_cfg
+
             return (
                 f"Moi! Olen Tiro, oppilas. "
                 f"En osaa vielä aihetta {cfg['topic_text']}, joten tarvitsen opetusta. "
@@ -546,16 +616,38 @@ SÄÄNNÖT:
         return None
 
     def _handle_instruction_request(self, user_input: str) -> str | None:
+        """
+        Estää tilanteen, jossa käyttäjä pyytää ohjetta ja Tiro alkaa opettaa.
+        """
+
         text = user_input.strip().lower()
 
         instruction_keywords = [
-            "miten vaihdetaan", "miten tämä tehdään", "miten se tehdään",
-            "miten tehdään", "opeta minulle", "opeta mulle", "kerro miten",
-            "kerro minulle miten", "mitä tarvitaan", "mitä työkaluja",
-            "anna ohje", "anna ohjeet", "ohjeet", "neuvo minua",
-            "neuvo miten", "kuinka vaihdetaan", "kuinka tämä tehdään",
-            "how do i", "how to", "teach me", "what do i need",
-            "give me instructions", "instructions",
+            # suomi
+            "miten vaihdetaan",
+            "miten tämä tehdään",
+            "miten se tehdään",
+            "miten tehdään",
+            "opeta minulle",
+            "opeta mulle",
+            "kerro miten",
+            "kerro minulle miten",
+            "mitä tarvitaan",
+            "mitä työkaluja",
+            "anna ohje",
+            "anna ohjeet",
+            "ohjeet",
+            "neuvo minua",
+            "neuvo miten",
+            "kuinka vaihdetaan",
+            "kuinka tämä tehdään",
+            # englanti
+            "how do i",
+            "how to",
+            "teach me",
+            "what do i need",
+            "give me instructions",
+            "instructions",
         ]
 
         if any(keyword in text for keyword in instruction_keywords):
@@ -565,6 +657,10 @@ SÄÄNNÖT:
             )
 
         return None
+
+    # --------------------------------------------------
+    # Knowledge map -päivitys
+    # --------------------------------------------------
 
     def _update_knowledge_map(self, user_input: str) -> None:
         cfg = self.config.topic_cfg
@@ -623,6 +719,7 @@ Sallitut arvot:
                 temperature=0.0,
                 max_tokens=self.config.judge_max_tokens,
             )
+
             data = json.loads(res.choices[0].message.content)
 
             cleaned = {
@@ -634,8 +731,13 @@ Sallitut arvot:
 
         except (OpenAIError, json.JSONDecodeError, ValueError) as e:
             logger.warning("Knowledge map -päivitys epäonnistui: %s", e)
+            # Säilytetään aiempi tila.
 
     def _normalize_status(self, value: str) -> str:
+        """
+        Varmistaa, että KnowledgeMapin arvot ovat vain sallittuja arvoja.
+        """
+
         allowed = {"tuntematon", "osittain", "hallussa"}
 
         if not isinstance(value, str):
@@ -648,6 +750,10 @@ Sallitut arvot:
 
         return "tuntematon"
 
+    # --------------------------------------------------
+    # Yhden kutsun apumetodi
+    # --------------------------------------------------
+
     def _one_shot(self, prompt: str, temperature: float = 0.4) -> str:
         msgs = self.history + [{"role": "user", "content": prompt}]
 
@@ -658,7 +764,9 @@ Sallitut arvot:
                 temperature=temperature,
                 max_tokens=self.config.one_shot_max_tokens,
             )
+
             return res.choices[0].message.content
+
         except OpenAIError:
             logger.exception("One-shot-kutsu epäonnistui")
             return (
